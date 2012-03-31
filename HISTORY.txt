@@ -1,0 +1,16 @@
+2008/9/25
+ o fix midi-channel & midi-program to be 1-based.
+
+2006/8/28
+ o Fix Accidental carry on within a measure.
+ o XML Save using XML Writer.
+
+2006/8/25
+ o Fixes multi-voice bug from "David Bolton" <davidkbolton@gmail.com>.
+ o Fixes slur numbering.
+
+2006/8/22
+ o Multi-voice support from "David Bolton" <davidkbolton@gmail.com>.
+
+2006/7/29
+ o Syllable element fixes from "David Bolton" <davidkbolton@gmail.com>.
