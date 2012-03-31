@@ -57,7 +57,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(WXWIDGETS)\include;$(WXWIDGETS)\lib\vc_lib\mswud;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;$(WXWIDGETS)\include;$(WXWIDGETS)\lib\vc_lib\mswud;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>true</MinimalRebuild>
@@ -89,7 +89,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>.;$(WXWIDGETS)\include;$(WXWIDGETS)\lib\vc_lib\mswu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;$(WXWIDGETS)\include;$(WXWIDGETS)\lib\vc_lib\mswu;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -111,18 +111,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="HISTORY.txt" />
-    <None Include="LICENSE.txt" />
-    <None Include="README.txt" />
+    <None Include="..\..\HISTORY.txt" />
+    <None Include="..\..\LICENSE.txt" />
+    <None Include="..\..\README.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="nwc2xml.cpp">
+    <ClCompile Include="..\..\src\nwc2xml.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="Precompile.cpp">
+    <ClCompile Include="..\..\src\Precompile.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -130,22 +130,22 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="xmlsaver.cpp" />
-    <ClCompile Include="xmlwriter.cpp" />
-    <ClCompile Include="nwcfile.cpp" />
-    <ClCompile Include="nwcobj.cpp" />
+    <ClCompile Include="..\..\src\xmlsaver.cpp" />
+    <ClCompile Include="..\..\src\xmlwriter.cpp" />
+    <ClCompile Include="..\..\src\nwcfile.cpp" />
+    <ClCompile Include="..\..\src\nwcobj.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Precompile.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="xmlsaver.h" />
-    <ClInclude Include="xmlwriter.h" />
-    <ClInclude Include="nwcfile.h" />
-    <ClInclude Include="nwcobj.h" />
-    <ClInclude Include="TVector.h" />
+    <ClInclude Include="..\..\src\Precompile.h" />
+    <ClInclude Include="..\..\src\resource.h" />
+    <ClInclude Include="..\..\src\xmlsaver.h" />
+    <ClInclude Include="..\..\src\xmlwriter.h" />
+    <ClInclude Include="..\..\src\nwcfile.h" />
+    <ClInclude Include="..\..\src\nwcobj.h" />
+    <ClInclude Include="..\..\src\TVector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="nwc2xml.rc">
+    <ResourceCompile Include="..\..\src\nwc2xml.rc">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
