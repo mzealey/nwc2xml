@@ -3,8 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(__stdafx_h__)
-#define __stdafx_h__
+#if !defined(__Precompile_H__)
+#define __Precompile_H__
 
 #if !defined(MACOS)
 #pragma once
@@ -26,4 +26,4 @@
 
 typedef TVector<unsigned char> TByteArray;
 
-#endif // !defined(__stdafx_h__)
+#endif // !defined(__Precompile_H__)

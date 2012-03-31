@@ -66,7 +66,7 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
 
 
 static wxChar* s_ProgramLogo =
-_T("nwc2xml v1.5 Copyright (C) 2005-2009 james lee (juria90@yahoo.com)\n")
+_T("nwc2xml v1.5 Copyright (C) 2005-2012 james lee (juria90@yahoo.com)\n")
 _T("nwc2xml converts <file.nwc> file to musicxml file <file.xml>.\n")
 _T("This program supports upto nwc v2.0.\n");
 
