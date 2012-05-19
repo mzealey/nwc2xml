@@ -1,14 +1,16 @@
 Build instruction for nwc2xml.
 
-As of Now(March 2012), building nwc2xml is support only in Windows platform.
-Visual Studio 2010 & wxWidgets 2.8 are required to build nwc2xml.
+As of Now(May 2012), building nwc2xml is support only in Windows platform.
+Visual Studio 2005/2010 & wxWidgets 2.8 are required to build nwc2xml.
 
 1. Install wxWidgets 2.8 and build Unicode static library.
-Open build\msw\wx.dsw, select Unicode Debug/Unicode Release configuration and build it.
+Open $WXWIDGETS\build\msw\wx.dsw, select Unicode Debug/Unicode Release configuration and build it,
+where $WXWIDGETS is the wxWidgets 2.8 installation directory.
 
 2. Set environment variable WXWIDGETS to top level of wxWidgets library.
 i.e. WXWIDGETS=C:\projects\wxWidgets
 
-3. Open nwc2xml.sln and build Debug/Release configuration.
+3. Open $nwc2xml\build\msw\nwc2xml_vc8.sln or $nwc2xml\build\msw\nwc2xml_vc10.sln and build Debug/Release configuration,
+where $nwc2xml is the root directory of nwx2xml.
 
 James Lee.

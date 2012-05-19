@@ -428,6 +428,9 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 			}
 		}
 
+		if ( na & NA_GRACE )
+			writer.WriteKeyStartEnd(_T("grace"));
+
 		if ( m_nVoice )
 			writer.WriteInteger(_T("voice"), m_nVoice);
 
