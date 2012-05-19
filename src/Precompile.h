@@ -26,4 +26,28 @@
 
 typedef TVector<unsigned char> TByteArray;
 
+#ifndef	_WIN32
+typedef unsigned char BYTE;
+typedef unsigned int  UINT;
+typedef unsigned int  DWORD;
+typedef const wxChar* LPCTSTR;
+
+#define	HIBYTE(W)		(((W) >> 8) & 0xFF)
+#define	LOBYTE(W)		((W) & 0xFF)
+
+#define	ANSI_CHARSET		0
+
+#define	ERROR_SUCCESS		0
+#define	ERROR_INVALID_DATA	13
+#define	ERROR_GEN_FAILURE	31
+
+#define _countof(x)	(sizeof(x)/sizeof(x[0]))
+
+inline long MulDiv(long a, long b, long c) { return a*b/c; }
+#endif
+
+#define	ERROR_INVALID_VERSION	100
+#define	ERROR_INVALID_STAFF		101
+
+
 #endif // !defined(__Precompile_H__)

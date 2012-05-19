@@ -93,9 +93,9 @@ void CObj::DumpBinary(FILE* fp, BYTE* pData, size_t nCount, bool bPrependComma)
 	for ( size_t i=0 ; i<nCount ; i++ )
 	{
 		if ( i == 0 && bPrependComma == false )
-			_ftprintf(fp, _T(" 0x%02x"), pData[i]);
+			wxFprintf(fp, _T(" 0x%02x"), pData[i]);
 		else
-			_ftprintf(fp, _T(",0x%02x"), pData[i]);
+			wxFprintf(fp, _T(",0x%02x"), pData[i]);
 	}
 }
 
@@ -118,10 +118,10 @@ bool CClefObj::Load(wxFile& file)
 
 bool CClefObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("clef: "));
-	_ftprintf(fp, _T("Color(%d),ShowPrint(%d)"), GetColor(), GetShowPrinted());
-	_ftprintf(fp, _T(",Clef(%d),OctaveShift(%d)"), mClefType, mOctaveShift);
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("clef: "));
+	wxFprintf(fp, _T("Color(%d),ShowPrint(%d)"), GetColor(), GetShowPrinted());
+	wxFprintf(fp, _T(",Clef(%d),OctaveShift(%d)"), mClefType, mOctaveShift);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -250,22 +250,22 @@ bool CKeySigObj::Load(wxFile& file)
 
 bool CKeySigObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("key sig: "));
+	wxFprintf(fp, _T("key sig: "));
 
 	wxString strName;
 	if ( GetStdName(strName) )
 	{
-		_ftprintf(fp, _T("%s"), strName.c_str());
+		wxFprintf(fp, _T("%s"), strName.c_str());
 		DumpBinary(fp, mData2, sizeof(mData2));
 	}
 	else
 	{
-		_ftprintf(fp, _T("flat(0x%02x)"), mFlat);
+		wxFprintf(fp, _T("flat(0x%02x)"), mFlat);
 		DumpBinary(fp, mData2, sizeof(mData2));
-		_ftprintf(fp, _T(",sharp(0x%02x)"), mSharp);
+		wxFprintf(fp, _T(",sharp(0x%02x)"), mSharp);
 	}
 	DumpBinary(fp, mData3, sizeof(mData3));
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -280,7 +280,7 @@ bool CBarLineObj::Load(wxFile& file)
 
 bool CBarLineObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("bar: "));
+	wxFprintf(fp, _T("bar: "));
 
 	UINT nStyle = mStyle & 0x7F;
 	wxString strStyle;
@@ -306,12 +306,12 @@ bool CBarLineObj::Dump(FILE* fp)
 		strStyle = _T("invalid"); break;
 	}
 
-	_ftprintf(fp, _T("style(%s)"), strStyle.c_str());
+	wxFprintf(fp, _T("style(%s)"), strStyle.c_str());
 	if ( nStyle == 5 )
-		_ftprintf(fp, _T(",local repeat(%d)"), mLocalRepeatCount);
+		wxFprintf(fp, _T(",local repeat(%d)"), mLocalRepeatCount);
 	if ( mStyle & 0x80 )
-		_ftprintf(fp, _T(",force system break"));
-	_ftprintf(fp, _T("\n"));
+		wxFprintf(fp, _T(",force system break"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -326,7 +326,7 @@ bool CEndingObj::Load(wxFile& file)
 
 bool CEndingObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("ending: "));
+	wxFprintf(fp, _T("ending: "));
 
 	wxString strStyle;
 	switch(mStyle)
@@ -348,9 +348,9 @@ bool CEndingObj::Dump(FILE* fp)
 		strStyle = _T("Default Ending"); break;
 	}
 
-	_ftprintf(fp, _T("style(%s)"), strStyle.c_str());
+	wxFprintf(fp, _T("style(%s)"), strStyle.c_str());
 	DumpBinary(fp, mData2, sizeof(mData2));
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -380,9 +380,9 @@ bool CInstrumentObj::Load(wxFile& file)
 
 bool CInstrumentObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("instrument: "));
+	wxFprintf(fp, _T("instrument: "));
 	DumpBinary(fp, mData1, sizeof(mData1), false);
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -397,9 +397,9 @@ bool CTimeSigObj::Load(wxFile& file)
 
 bool CTimeSigObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("time sig: "));
-	_ftprintf(fp, _T("%d/%d"), mBit_Measure, 1 << mBits );
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("time sig: "));
+	wxFprintf(fp, _T("%d/%d"), mBit_Measure, 1 << mBits );
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -429,12 +429,12 @@ bool CTempoObj::Load(wxFile& file)
 
 bool CTempoObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("tempo: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s=%d"), GetBaseAsString().c_str(), mTempoValue);
-	_ftprintf(fp, _T(",String(%s)"), mText.c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("tempo: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s=%d"), GetBaseAsString().c_str(), mTempoValue);
+	wxFprintf(fp, _T(",String(%s)"), mText.c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -499,11 +499,11 @@ bool CDynamicObj::Load(wxFile& file)
 
 bool CDynamicObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("dynamic: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString(true).c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("dynamic: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString(true).c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -536,7 +536,7 @@ wxString CDynamicObj::GetStyleAsString(bool bExtended) const
 				strVol.Printf(_T("%d"), mMIDIVolume);
 
 			wxString strTmp;
-			strTmp.Printf(_T("(%s,%s)"), strVel, strVol);
+			strTmp.Printf(_T("(%s,%s)"), strVel.c_str(), strVol.c_str());
 			str += strTmp;
 		}
 	}
@@ -564,15 +564,15 @@ bool CNoteObj::Load(wxFile& file)
 
 bool CNoteObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("note: "));
-	_ftprintf(fp, _T("%2s"), GetDurationAsString().c_str());
+	wxFprintf(fp, _T("note: "));
+	wxFprintf(fp, _T("%2s"), GetDurationAsString().c_str());
 	DumpBinary(fp, mData2, sizeof(mData2)+sizeof(mAttribute1));
-	_ftprintf(fp, _T(",%s"), GetPitchAsString().c_str());
+	wxFprintf(fp, _T(",%s"), GetPitchAsString().c_str());
 	DumpBinary(fp, mAttribute2, sizeof(mAttribute2));
 	DumpBinary(fp, mData3, sizeof(mData3));
 	if ( m_pParent->m_pParent->nVersion >= NWC_Version200 && (mAttribute2[0] & 0x40) != 0 )
-		_ftprintf(fp, _T(",stemlength(%d)"), mStemLength);
-	_ftprintf(fp, _T("\n"));
+		wxFprintf(fp, _T(",stemlength(%d)"), mStemLength);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -681,7 +681,7 @@ wxString CNoteObj::GetPitchAsString() const
 	}
 
 	wxString s;
-	s.Printf(_T("Pos(%2s)"), str);
+	s.Printf(_T("Pos(%2s)"), str.c_str());
 	return s;
 }
 
@@ -813,17 +813,17 @@ bool CRestObj::Load(wxFile& file)
 
 bool CRestObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("rest: "));
+	wxFprintf(fp, _T("rest: "));
 	DumpData(fp);
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
 void CRestObj::DumpData(FILE* fp)
 {
-	_ftprintf(fp, _T("%2s"), GetDurationAsString().c_str());
+	wxFprintf(fp, _T("%2s"), GetDurationAsString().c_str());
 	DumpBinary(fp, mData2, sizeof(mData2));
-	_ftprintf(fp, _T(",offset(%d)"), mOffset);
+	wxFprintf(fp, _T(",offset(%d)"), mOffset);
 }
 
 wxString CRestObj::GetDurationAsString() const
@@ -964,13 +964,13 @@ bool CNoteCMObj::LoadChildren(wxFile& in, FILE* out, CStaff* pStaff)
 
 bool CNoteCMObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("NoteCM: "));
+	wxFprintf(fp, _T("NoteCM: "));
 	size_t nCount = ( m_pParent->m_pParent->nVersion <= NWC_Version170 ) ? sizeof(mData1) : 8;
 	DumpBinary(fp, mData1, nCount, false);
 	if ( m_pParent->m_pParent->nVersion >= NWC_Version200 && (mData1[7] & 0x40) != 0 )
-		_ftprintf(fp, _T(",stemlength(%d)"), mStemLength);
-	_ftprintf(fp, _T(",Count(%d)"), mCount);
-	_ftprintf(fp, _T("\n"));
+		wxFprintf(fp, _T(",stemlength(%d)"), mStemLength);
+	wxFprintf(fp, _T(",Count(%d)"), mCount);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1003,11 +1003,11 @@ bool CPedalObj::Load(wxFile& file)
 
 bool CPedalObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("Pedal: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString().c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("Pedal: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString().c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1051,11 +1051,11 @@ bool CFlowDirObj::Load(wxFile& file)
 
 bool CFlowDirObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("FlowDir: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString().c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("FlowDir: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString().c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1101,11 +1101,11 @@ bool CMPCObj::Load(wxFile& file)
 
 bool CMPCObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("MPC: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T("MPC: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
 	DumpBinary(fp, mData1, sizeof(mData1));
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1132,12 +1132,12 @@ bool CTempVarObj::Load(wxFile& file)
 
 bool CTempVarObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("TempVar: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString().c_str());
-	_ftprintf(fp, _T(",Delay=%d"), mDelay);
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("TempVar: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString().c_str());
+	wxFprintf(fp, _T(",Delay=%d"), mDelay);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1178,11 +1178,11 @@ bool CDynVarObj::Load(wxFile& file)
 
 bool CDynVarObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("DynVar: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString().c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("DynVar: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString().c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1223,11 +1223,11 @@ bool CPerformObj::Load(wxFile& file)
 
 bool CPerformObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("Perform: "));
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
-	_ftprintf(fp, _T(",Placement=0x%0x"), mPlacement);
-	_ftprintf(fp, _T(",%s"), GetStyleAsString().c_str());
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T("Perform: "));
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
+	wxFprintf(fp, _T(",%s"), GetStyleAsString().c_str());
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1281,14 +1281,14 @@ bool CTextObj::Load(wxFile& file)
 
 bool CTextObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("text: (%s),"), mText.c_str());
-	_ftprintf(fp, _T("Pos(%d)"), mPos);
+	wxFprintf(fp, _T("text: (%s),"), mText.c_str());
+	wxFprintf(fp, _T("Pos(%d)"), mPos);
 	if ( mPreserveWidth )
-		_ftprintf(fp, _T(",PreserveWidth=%d"), mPreserveWidth);
-	_ftprintf(fp, _T(",Justification=%d"), mJustification);
-	_ftprintf(fp, _T(",Alignment=%d"), mAlignment);
-	_ftprintf(fp, _T(",Font=%d"), mFont);
-	_ftprintf(fp, _T("\n"));
+		wxFprintf(fp, _T(",PreserveWidth=%d"), mPreserveWidth);
+	wxFprintf(fp, _T(",Justification=%d"), mJustification);
+	wxFprintf(fp, _T(",Alignment=%d"), mAlignment);
+	wxFprintf(fp, _T(",Font=%d"), mFont);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1324,10 +1324,10 @@ bool CRestCMObj::LoadChildren(wxFile& in, FILE* out, CStaff* pStaff)
 
 bool CRestCMObj::Dump(FILE* fp)
 {
-	_ftprintf(fp, _T("RestCM: "));
+	wxFprintf(fp, _T("RestCM: "));
 	DumpData(fp);
-	_ftprintf(fp, _T(",Count(%d)"), mCount);
-	_ftprintf(fp, _T("\n"));
+	wxFprintf(fp, _T(",Count(%d)"), mCount);
+	wxFprintf(fp, _T("\n"));
 	return true;
 }
 
@@ -1353,9 +1353,15 @@ bool CFontInfo::Dump(FILE* fp, int nIndex)
 		break;
 	}
 
-	_ftprintf(fp, _T("font%d:%s, size=%d, style=%s\n"), nIndex, strName.c_str(), btSize, strStyle.c_str());
+	wxFprintf(fp, _T("font%d:%s, size=%d, style=%s\n"), nIndex, strName.c_str(), btSize, strStyle.c_str());
 	return true;
 }
+
+#ifdef	__WXDEBUG__
+#define	MyTrap()		wxTrap()
+#else
+inline void MyTrap()	{ }
+#endif
 
 CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 {
@@ -1365,7 +1371,7 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 	if ( in.Read(&objType, sizeof(objType)) == false )
 	{
 		fprintf(stderr, "unexpected end of file\n");
-		if ( IsDebuggerPresent() ) DebugBreak();
+		if ( wxIsDebuggerRunning() ) MyTrap();
 		return NULL;
 	}
 
@@ -1400,7 +1406,7 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 		if ( bResult )
 		{
 			if ( g_bDumpOffset )
-				_ftprintf(out, _T("%08x:"), nPos);
+				wxFprintf(out, _T("%08x:"), nPos);
 			pObj->Dump(out);
 
 			if ( Obj_NoteCM == pObj->mObjType )
@@ -1418,14 +1424,14 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 			pObj = NULL;
 
 			fprintf(stderr, "failed to load object type=0x%04x, at file offset=%08x\n", (unsigned short)objType, nPos);
-			if ( IsDebuggerPresent() ) DebugBreak();
+			if ( wxIsDebuggerRunning() ) MyTrap();
 			return NULL;
 		}
 	}
 	else
 	{
 		fprintf(stderr, "unknown object type=0x%04x, at file offset=%08x\n", (unsigned short)objType, nPos);
-		if ( IsDebuggerPresent() ) DebugBreak();
+		if ( wxIsDebuggerRunning() ) MyTrap();
 		return NULL;
 	}
 
@@ -1531,16 +1537,16 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 {
 	long nPos = in.Tell();
 	strName = LoadStringNULTerminated(in);
-	_ftprintf(out, _T("name=%s\n"), strName.c_str());
+	wxFprintf(out, _T("name=%s\n"), strName.c_str());
 	if ( m_pParent->nVersion >= NWC_Version200 )
 	{
 		strLabel = LoadStringNULTerminated(in);
-		_ftprintf(out, _T("label=%s\n"), strLabel.c_str());
+		wxFprintf(out, _T("label=%s\n"), strLabel.c_str());
 		strInstName = LoadStringNULTerminated(in);
-		_ftprintf(out, _T("inst=%s\n"), strInstName.c_str());
+		wxFprintf(out, _T("inst=%s\n"), strInstName.c_str());
 	}
 	strGroup = LoadStringNULTerminated(in);
-	_ftprintf(out, _T("group=%s\n"), strGroup.c_str());
+	wxFprintf(out, _T("group=%s\n"), strGroup.c_str());
 
 	nPos = in.Tell();
 
@@ -1782,11 +1788,11 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 bool CStaff::LoadLyric(wxFile& in, FILE* out)
 {
 	long nPos = in.Tell();
-	_ftprintf(out, _T("#lyric = %d\n"), mStaffInfo.nNumLyric);
+	wxFprintf(out, _T("#lyric = %d\n"), mStaffInfo.nNumLyric);
 	if ( !(0 <= mStaffInfo.nNumLyric && mStaffInfo.nNumLyric <= 8 ) )
 	{
 		fprintf(stderr, "invalid nNumLyric=%d at file offset=%08x\n", mStaffInfo.nNumLyric, nPos);
-		if ( IsDebuggerPresent() ) DebugBreak();
+		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}
 
@@ -1822,7 +1828,7 @@ bool CStaff::LoadLyric(wxFile& in, FILE* out)
 			in.Seek(nPos, wxFromStart);
 		}
 
-		_ftprintf(out, _T("lyric%d : %s\n"), i, strThisLyric.c_str());
+		wxFprintf(out, _T("lyric%d : %s\n"), i, strThisLyric.c_str());
 	}
 
 	return true;
@@ -1854,7 +1860,7 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 	if ( bResult == false )
 	{
 		fprintf(stderr, "error in file, at file offset=%08x\n", nPos);
-		if ( IsDebuggerPresent() ) DebugBreak();
+		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}
 
@@ -1865,7 +1871,7 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 	if ( nObjCount < 0 )
 	{
 		fprintf(stderr, "invalid objcount=%d, at file offset=%08x\n", nObjCount, nPos);
-		if ( IsDebuggerPresent() ) DebugBreak();
+		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}
 
@@ -1884,6 +1890,6 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 		}
 	}
 
-	_ftprintf(out, _T("end of staff\n"));
+	wxFprintf(out, _T("end of staff\n"));
 	return true;
 }

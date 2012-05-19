@@ -6,11 +6,11 @@
 #include "XMLSaver.h"
 #include "wx/cmdline.h"
 
-DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
+DWORD ConvertNWC2MusicXML(const wxString& strNWC, bool bGenerateLog)
 {
 	wxFile in;
 	if ( in.Open(strNWC) == FALSE )
-		return GetLastError();
+		return wxSysErrorCode();
 
 	wxString strFile;
 	if ( bGenerateLog )
@@ -23,7 +23,7 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
 #ifdef	_WIN32
 		strFile = _T("NUL");
 #else
-		strFile = _T("/dev/nul");
+		strFile = _T("/dev/null");
 #endif
 	}
 
@@ -34,7 +34,7 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
 	if ( out.Open(strFile, _T("wt")) == FALSE )
 #endif
 	{
-		_ftprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
+		wxFprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
 		return ERROR_GEN_FAILURE;
 	}
 
@@ -45,7 +45,7 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
 
 	if ( dwResult != ERROR_SUCCESS )
 	{
-		_ftprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
+		wxFprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
 		wxRemoveFile(strFile);
 		return dwResult;
 	}
@@ -57,9 +57,9 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, BOOL bGenerateLog)
 	saver.Save(strNWC, strFile, &nwc);
 
 	if ( dwResult == ERROR_SUCCESS )
-		_ftprintf(stderr, _T("%s : conversion saved to %s.\n"), strNWC.c_str(), strFile.c_str());
+		wxFprintf(stderr, _T("%s : conversion saved to %s.\n"), strNWC.c_str(), strFile.c_str());
 	else
-		_ftprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
+		wxFprintf(stderr, _T("%s : conversion failed.\n"), strNWC.c_str());
 
 	return dwResult;
 }
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 		pCSConv = new wxCSConv(strCharset);
 		if ( !pCSConv->IsOk() )
 		{
-			_ftprintf(stderr, _T("unknown charset=%s.\n"), strCharset.c_str());
+			wxFprintf(stderr, _T("unknown charset=%s.\n"), strCharset.c_str());
 			delete pCSConv;
 			pCSConv = NULL;
 		}
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	BOOL bGenerateLog = parser.Found(_T("log"));
+	bool bGenerateLog = parser.Found(_T("log"));
 
 	size_t nParamCount = parser.GetParamCount();
 	for ( size_t i=0 ; i <nParamCount ; i++ )

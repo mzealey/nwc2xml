@@ -3,9 +3,6 @@
 
 #include "nwcobj.h"
 
-#define	ERROR_INVALID_VERSION	COMADMIN_E_APP_FILE_VERSION
-#define	ERROR_INVALID_STAFF		COMADMIN_E_APP_FILE_VERSION
-
 struct NWCInfo
 {
 	wxString	strUser;

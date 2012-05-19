@@ -13,11 +13,11 @@ class CXMLWriter
 {
 public:
 	CXMLWriter();
-	CXMLWriter(LPCTSTR szFileName, BOOL bStandalone=FALSE);
+	CXMLWriter(LPCTSTR szFileName, bool bStandalone=FALSE);
 	~CXMLWriter();
 
-	BOOL Create(LPCTSTR szFileName, BOOL bStandalone=FALSE);
-	BOOL IsOk() const	{ return m_pFile != NULL; }
+	bool Create(LPCTSTR szFileName, bool bStandalone=FALSE);
+	bool IsOk() const	{ return m_pFile != NULL; }
 
 	void WriteDocTypeSystem(LPCTSTR szElement, LPCTSTR szURI, LPCTSTR szDecl=NULL);
 	void WriteDocTypePublic(LPCTSTR szElement, LPCTSTR szId, LPCTSTR szURI, LPCTSTR szDecl=NULL);

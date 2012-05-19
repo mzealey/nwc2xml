@@ -8,7 +8,7 @@
 #include "wx/zstream.h"
 #include "wx/filename.h"
 
-DWORD UncompressNSave(LPCTSTR szFileName, LPBYTE compr, size_t comprLen)
+DWORD UncompressNSave(LPCTSTR szFileName, BYTE* compr, size_t comprLen)
 {
 	wxMemoryInputStream mis(compr, comprLen);
 
@@ -18,7 +18,7 @@ DWORD UncompressNSave(LPCTSTR szFileName, LPBYTE compr, size_t comprLen)
 	if ( file.Create(szFileName, true) == false )
 	{
 		wxRemoveFile(szFileName);
-		return GetLastError();
+		return wxSysErrorCode();
 	}
 
 	wxFileOutputStream fos(file);
@@ -150,24 +150,24 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 			return LoadCompressed(in, out, fl);
 		}
 
-		fprintf(stderr, "invalid szNWCHeader\n");
+		wxFprintf(stderr, _T("invalid szNWCHeader\n"));
 		return ERROR_INVALID_DATA;
 	}
 
 	if ( sizeof(nVersion) != in.Read(&nVersion, sizeof(nVersion)) )
 	{
-		fprintf(stderr, "unexpected EOF while reading version\n");
+		wxFprintf(stderr, _T("unexpected EOF while reading version\n"));
 		wxASSERT(false);
 		return ERROR_INVALID_DATA;
 	}
 
 	if ( IsValidVersion(nVersion) )
 	{
-		_ftprintf(out, _T("version:%d.%d\n"), nVerMajor, nVerMinor);
+		wxFprintf(out, _T("version:%d.%d\n"), nVerMajor, nVerMinor);
 	}
 	else
 	{
-		fprintf(stderr, "unknown version number\n");
+		wxFprintf(stderr, _T("unknown version number\n"));
 		return ERROR_INVALID_VERSION;
 	}
 
@@ -176,36 +176,36 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	if ( sizeof(btUnknown2) != in.Read(btUnknown2, sizeof(btUnknown2)) ||
 		 btUnknown2[0] != _szHeader2[0] || btUnknown2[1] != _szHeader2[1] || btUnknown2[3] != _szHeader2[3] )
 	{
-		//fprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
+		//wxFprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
 		//wxASSERT(false);
 	}
 
 	if ( btUnknown2[2] == 5 )
 	{
-		_ftprintf(out, _T("saved by unregistered version\n"));
+		wxFprintf(out, _T("saved by unregistered version\n"));
 	}
 	else if ( btUnknown2[2] != 0 )
 	{
-		//fprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
+		//wxFprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
 	}
 
 	strUser = LoadStringNULTerminated(in);
 	strUnknown1 = LoadStringNULTerminated(in);
-	_ftprintf(out, _T("user:'%s', '%s'\n"), strUser.c_str(), strUnknown1.c_str());
+	wxFprintf(out, _T("user:'%s', '%s'\n"), strUser.c_str(), strUnknown1.c_str());
 
 	nPos = in.Tell();
 	char szHeader3[8] = "\x00\x00\x00\x00\x00\x00\x00";					// implies NUL at last
 	if ( sizeof(szHeader3) != in.Read(buf, sizeof(szHeader3)) ||
 		 memcmp(szHeader3, buf, sizeof(szHeader3)) != 0 )
 	{
-		fprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
+		wxFprintf(stderr, _T("invalid btUnknown2 at 0x%08x\n"), nPos);
 		//wxASSERT(false);
 	}
 
 	short nUnknown4;
 	if ( sizeof(nUnknown4) != in.Read(&nUnknown4, sizeof(nUnknown4)) )
 	{
-		fprintf(stderr, "unexpected EOF while reading\n");
+		wxFprintf(stderr, _T("unexpected EOF while reading\n"));
 		wxASSERT(false);
 		return ERROR_INVALID_DATA;
 	}
@@ -217,13 +217,13 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	strCopyright1 = LoadStringNULTerminated(in);
 	strCopyright2 = LoadStringNULTerminated(in);
 	strComment = LoadStringNULTerminated(in);
-	_ftprintf(out, _T("title:'%s'\n"), strTitle.c_str());
-	_ftprintf(out, _T("author:'%s'\n"), strAuthor.c_str());
+	wxFprintf(out, _T("title:'%s'\n"), strTitle.c_str());
+	wxFprintf(out, _T("author:'%s'\n"), strAuthor.c_str());
 	if ( nVersion >= NWC_Version200 )
-		_ftprintf(out, _T("lyricist:'%s'\n"), strLyricist.c_str());
-	_ftprintf(out, _T("copyright1:'%s'\n"), strCopyright1.c_str());
-	_ftprintf(out, _T("copyright2:'%s'\n"), strCopyright2.c_str());
-	_ftprintf(out, _T("comment:'%s'\n"), strComment.c_str());
+		wxFprintf(out, _T("lyricist:'%s'\n"), strLyricist.c_str());
+	wxFprintf(out, _T("copyright1:'%s'\n"), strCopyright1.c_str());
+	wxFprintf(out, _T("copyright2:'%s'\n"), strCopyright2.c_str());
+	wxFprintf(out, _T("comment:'%s'\n"), strComment.c_str());
 
 	nPos = in.Tell();
 	char _szReserved5[] = "\x5F\x00\x46\x32\x00";
@@ -231,14 +231,14 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	if ( nCount != (UINT)in.Read(&chExtendLastSystem, nCount) ||
 		 memcmp(_szReserved5, btUnknown3, sizeof(btUnknown3)) != 0 )
 	{
-//		fprintf(stderr, "invalid szReserved5 at 0x%08x\n", nPos);
+//		wxFprintf(stderr, "invalid szReserved5 at 0x%08x\n", nPos);
 //		wxASSERT(false);
 //		return ERROR_INVALID_DATA;
 	}
-	_ftprintf(out, _T("extend last system:'%c'\n"), chExtendLastSystem);
-	_ftprintf(out, _T("increase note spacing:'%c'\n"), chIncreaseNoteSpacing);
-	_ftprintf(out, _T("measurenumbers:'%s'\n"), GetMeasureNumbersAsString(btMeasureNumbers));
-	_ftprintf(out, _T("measurestart:%d\n"), nMeasureStart);
+	wxFprintf(out, _T("extend last system:'%c'\n"), chExtendLastSystem);
+	wxFprintf(out, _T("increase note spacing:'%c'\n"), chIncreaseNoteSpacing);
+	wxFprintf(out, _T("measurenumbers:'%s'\n"), GetMeasureNumbersAsString(btMeasureNumbers));
+	wxFprintf(out, _T("measurestart:%d\n"), nMeasureStart);
 
 	if ( nVersion >= NWC_Version130 )
 	{
@@ -248,10 +248,10 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		strMarginBottom = LoadStringSpaceTerminated(in);
 	}
 
-	_ftprintf(out, _T("margin:%s %s %s %s\n"), strMarginTop.c_str(), strMarginInside.c_str(), strMarginOutside.c_str(), strMarginBottom.c_str());
+	wxFprintf(out, _T("margin:%s %s %s %s\n"), strMarginTop.c_str(), strMarginInside.c_str(), strMarginOutside.c_str(), strMarginBottom.c_str());
 
 	in.Read(&bMirrorMargin, sizeof(bMirrorMargin));
-	_ftprintf(out, _T("mirrormargin:%d\n"), bMirrorMargin);
+	wxFprintf(out, _T("mirrormargin:%d\n"), bMirrorMargin);
 
 	nPos = in.Tell();
 	if ( sizeof(btUnknown5) != in.Read(&btUnknown5, sizeof(btUnknown5)) )
@@ -263,18 +263,18 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	{
 		in.Read(&nGroupVisibility, sizeof(nGroupVisibility));
 		in.Read(&bAllowLayering, sizeof(bAllowLayering));
-		_ftprintf(out, _T("group visibility:"));
+		wxFprintf(out, _T("group visibility:"));
 		CObj::DumpBinary(out, nGroupVisibility, sizeof(nGroupVisibility), false);
-		_ftprintf(out, _T("\nallowlayering:%d\n"), bAllowLayering);
+		wxFprintf(out, _T("\nallowlayering:%d\n"), bAllowLayering);
 	}
 	nPos = in.Tell();
 	//if ( btUnknown5[0] == 0x07 || btUnknown5[0] == 0x08 )
 	//{
 	//	strNotationTypeface = LoadStringNULTerminated(in);
-	//	_ftprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
+	//	wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
 	//}
 	in.Read(&nStaffHeight, sizeof(nStaffHeight));
-	_ftprintf(out, _T("staffheight=%d\n"), nStaffHeight);
+	wxFprintf(out, _T("staffheight=%d\n"), nStaffHeight);
 
 	nPos = in.Tell();
 
@@ -311,7 +311,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		}
 	}
 
-	_ftprintf(out, _T("#font=%d\n"), nFontCount);
+	wxFprintf(out, _T("#font=%d\n"), nFontCount);
 	for ( i=0; i<nFontCount; i++ )
 	{
 		mFontInfos[i].Dump(out, i);
@@ -331,12 +331,12 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		//in.Read(&btJustifyPrintedSystemVertically, sizeof(btJustifyPrintedSystemVertically));
 	}
 	in.Read(&nStaffCount, sizeof(nStaffCount));
-	_ftprintf(out, _T("titlepageinfo=%d\n"), btTitlePageInfo);
-	_ftprintf(out, _T("stafflabels=%s\n"), GetStaffLabelsAsString(btStaffLabels));
-	_ftprintf(out, _T("startpageno=%d\n"), nStartPageNo);
+	wxFprintf(out, _T("titlepageinfo=%d\n"), btTitlePageInfo);
+	wxFprintf(out, _T("stafflabels=%s\n"), GetStaffLabelsAsString(btStaffLabels));
+	wxFprintf(out, _T("startpageno=%d\n"), nStartPageNo);
 	//if ( nVersion >= NWC_Version200 )
-	//	_ftprintf(out, _T("justifyprintedsystemvertically=%d\n"), btJustifyPrintedSystemVertically);
-	_ftprintf(out, _T("staffcount=%d\n"), nStaffCount);
+	//	wxFprintf(out, _T("justifyprintedsystemvertically=%d\n"), btJustifyPrintedSystemVertically);
+	wxFprintf(out, _T("staffcount=%d\n"), nStaffCount);
 
 	fflush(out);
 
@@ -346,7 +346,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		CStaff* pStaff = new CStaff;
 		pStaff->SetParent(this);
 
-		_ftprintf(out, _T("\nstaff%d\n"), i);
+		wxFprintf(out, _T("\nstaff%d\n"), i);
 		if ( false == pStaff->Load(in, out, fl) )
 		{
 			delete pStaff;

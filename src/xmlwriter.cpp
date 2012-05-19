@@ -32,15 +32,15 @@ wxString	StrWriteXMLString(LPCTSTR szKey, LPCTSTR szValue)
 {
 	wxString strHexy = Str2XML(szValue);
 	wxString str;
-	str.Printf(_T("<%s>%s</%s>\n"), szKey, strHexy, szKey);
+	str.Printf(_T("<%s>%s</%s>\n"), szKey, strHexy.c_str(), szKey);
 
 	return str;
 }
 
 wxString	StrWriteXMLInteger(LPCTSTR szKey, int nValue)
 {
-	TCHAR szValue[32];
-	_stprintf(szValue, _T("%d"), nValue);
+	wxChar szValue[32];
+	wxSprintf(szValue, _T("%d"), nValue);
 
 	wxString str;
 	str.Printf(_T("<%s>%s</%s>\n"), szKey, szValue, szKey);
@@ -57,7 +57,7 @@ wxString	StrWriteXMLDouble(LPCTSTR szKey, double dValue)
 	}
 
 	wxString str;
-	str.Printf(_T("<%s>%s</%s>\n"), szKey, s, szKey);
+	str.Printf(_T("<%s>%s</%s>\n"), szKey, s.c_str(), szKey);
 
 	return str;
 }
@@ -84,7 +84,7 @@ CXMLWriter::CXMLWriter()
 {
 }
 
-CXMLWriter::CXMLWriter(LPCTSTR szFileName, BOOL bStandalone)
+CXMLWriter::CXMLWriter(LPCTSTR szFileName, bool bStandalone)
 : m_pFile(NULL)
 , m_bKeyOpen(FALSE)
 , m_bValueWritten(FALSE)
@@ -98,7 +98,7 @@ CXMLWriter::~CXMLWriter()
 	m_pFile = NULL;
 }
 
-BOOL CXMLWriter::Create(LPCTSTR szFileName, BOOL bStandalone)
+bool CXMLWriter::Create(LPCTSTR szFileName, bool bStandalone)
 {
 	FILE* pFile = wxFopen(szFileName, _T("wt"));
 	if ( pFile == NULL )
@@ -245,8 +245,8 @@ void CXMLWriter::WriteKeyStartDouble(LPCTSTR szKey, double dValue)
 
 void CXMLWriter::WriteKeyStartInteger(LPCTSTR szKey, int nValue)
 {
-	TCHAR szValue[32];
-	_stprintf(szValue, _T("%d"), nValue);
+	wxChar szValue[32];
+	wxSprintf(szValue, _T("%d"), nValue);
 
 	WriteKeyStartString(szKey, szValue);
 }
@@ -257,7 +257,7 @@ void CXMLWriter::WriteKeyStartString(LPCTSTR szKey, LPCTSTR szValue)
 
 	wxString strHexy = Str2XML(szValue);
 	wxString str;
-	str.Printf(_T("<%s>%s\n"), szKey, strHexy);
+	str.Printf(_T("<%s>%s\n"), szKey, strHexy.c_str());
 	WriteStringToFile(m_pFile, str);
 	m_bValueWritten = TRUE;
 
@@ -297,7 +297,7 @@ void CXMLWriter::WriteKeyEnd()
 			m_strKeys.RemoveAt(nSize-1);
 
 			wxString str;
-			str.Printf(_T("</%s>\n"), strKey);
+			str.Printf(_T("</%s>\n"), strKey.c_str());
 			WriteStringToFile(m_pFile, str);
 		}
 	}
@@ -373,8 +373,8 @@ void CXMLWriter::WriteAttrInteger(LPCTSTR szKey, int nValue)
 {
 	wxASSERT( m_bKeyOpen );
 
-	TCHAR szValue[32];
-	_stprintf(szValue, _T("%d"), nValue);
+	wxChar szValue[32];
+	wxSprintf(szValue, _T("%d"), nValue);
 
 	WriteAttrUnhexifyString(szKey, szValue);
 }
@@ -384,14 +384,14 @@ void CXMLWriter::WriteAttrString(LPCTSTR szKey, LPCTSTR szValue)
 	wxASSERT( m_bKeyOpen );
 
 	wxString str;
-	str.Printf(_T(" %s=\"%s\""), szKey, Str2XML(szValue));
+	str.Printf(_T(" %s=\"%s\""), szKey, Str2XML(szValue).c_str());
 	WriteStringToFile(m_pFile, str);
 }
 
 void CXMLWriter::WriteAttrURL(LPCTSTR szKey, LPCTSTR szValue)
 {
 	wxString str;
-	str.Printf(_T(" %s=\"file:///%s\""), szKey, Str2XML(szValue));
+	str.Printf(_T(" %s=\"file:///%s\""), szKey, Str2XML(szValue).c_str());
 	WriteStringToFile(m_pFile, str);
 }
 

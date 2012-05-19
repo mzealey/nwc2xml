@@ -6,6 +6,8 @@
 #include "XMLSaver.h"
 #include "XMLWriter.h"
 #include <math.h>
+#include "wx/filename.h"
+#include "wx/datetime.h"
 
 #ifdef DEBUG_NEW
 #undef THIS_FILE
@@ -163,7 +165,7 @@ bool FindEnding(CObj *const * pNext, CObj *const * pLast, wxString& strNumber)
 	return false;
 }
 
-inline	void	XMLSaver::SaveBarLine(CXMLWriter& writer, const CBarLineObj& obj, int& nMeasurement, BOOL bNewMeasure,
+inline	void	XMLSaver::SaveBarLine(CXMLWriter& writer, const CBarLineObj& obj, int& nMeasurement, bool bNewMeasure,
 									  CObj *const * pNext, CObj *const * pLast)
 {
 	BL_STYLE blStyle = obj.GetStyle();
@@ -217,7 +219,7 @@ inline	void	XMLSaver::SaveBarLine(CXMLWriter& writer, const CBarLineObj& obj, in
 	}
 
 	wxString strNumber;
-	BOOL bNumber = FindEnding(pNext, pLast, strNumber);
+	bool bNumber = FindEnding(pNext, pLast, strNumber);
 
 	if ( bNumber || blStyle == BL_DOUBLE || blStyle == BL_SECTION_OPEN || blStyle == BL_LOCAL_OPEN || blStyle == BL_MASTER_OPEN )
 	{
@@ -412,7 +414,7 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 		{
 			if ( na & NA_TIE_DIR_MASK )
 			{
-				wxChar* szDir = ( (na & NA_TIE_DIR_MASK) == NA_TIE_DIR_DOWN ) ? _T("under") : _T("over");
+				const wxChar* szDir = ( (na & NA_TIE_DIR_MASK) == NA_TIE_DIR_DOWN ) ? _T("under") : _T("over");
 				writer.WriteKeyStart(_T("tie"));
 				writer.WriteAttrString(_T("type"), _T("start"));
 
@@ -468,7 +470,7 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 			writer.WriteKeyEnd();
 		}
 
-		BOOL bStemUp = FALSE;
+		bool bStemUp = FALSE;
 		switch ( na & NA_STEM_MASK )
 		{
 		case	NA_STEM_UP :
@@ -500,9 +502,9 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 			writer.WriteKeyEnd();
 		}
 
-		BOOL bNotations = (na & (NA_TIE_BEG|NA_TIE_END|NA_SLUR_MASK) ) != 0;
-		BOOL bArticulation = ( na & (NA_ACCENT|NA_STACCATO|NA_TENUTO) ) != 0;
-		BOOL bTriplet = ( dt & DT_TRIPLET ) != 0;
+		bool bNotations = (na & (NA_TIE_BEG|NA_TIE_END|NA_SLUR_MASK) ) != 0;
+		bool bArticulation = ( na & (NA_ACCENT|NA_STACCATO|NA_TENUTO) ) != 0;
+		bool bTriplet = ( dt & DT_TRIPLET ) != 0;
 
 		if ( bNotations || bArticulation || bTriplet )
 		{
@@ -536,7 +538,7 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 				writer.WriteAttrInteger(_T("number"), m_nSlurNo);
 				if ( (na & NA_SLUR_MASK) == NA_SLUR_BEG && (na & NA_SLUR_DIR_MASK) )
 				{
-					wxChar* szDir = ( (na & NA_SLUR_DIR_MASK) == NA_SLUR_DIR_DOWN ) ? _T("below") : _T("above");
+					const wxChar* szDir = ( (na & NA_SLUR_DIR_MASK) == NA_SLUR_DIR_DOWN ) ? _T("below") : _T("above");
 					writer.WriteAttrString(_T("placement"), szDir);
 				}
 				writer.WriteKeyEnd();
@@ -665,7 +667,7 @@ inline	void	XMLSaver::SaveRest(CXMLWriter& writer, const CRestObj& obj, long nDi
 
 		wxChar chStep[2] = {0};
 		int nOctave;
-		BOOL bNotDefPos = obj.GetOctaveStep(m_CA, nOctave, chStep[0]);
+		bool bNotDefPos = obj.GetOctaveStep(m_CA, nOctave, chStep[0]);
 		if ( bNotDefPos )
 		{
 			writer.WriteKeyStart(_T("rest"));
@@ -699,8 +701,8 @@ inline	void	XMLSaver::SaveNoteCM(CXMLWriter& writer, const CNoteCMObj& obj,
 									 const CLyricArray& strLyrics, int& nLyricIndex)
 {
 	UINT nStemMask = obj.GetStemMask();
-	BOOL bLyricSaved = FALSE;
-	BOOL bSaveNote = FALSE;
+	bool bLyricSaved = FALSE;
+	bool bSaveNote = FALSE;
 	for ( size_t i=0 ; i<obj.mObjArray.GetCount() ; i++ )
 	{
 		CObj* pObj = obj.mObjArray[i];
@@ -952,7 +954,7 @@ inline	void XMLSaver::SaveMultiVoice(CXMLWriter& writer, const CStaff& staff,
 	int nStemMask = 0;
 	TVector<CObj*>*	pObjArray;
 	m_nVoice = 2;
-	BOOL bContinue = TRUE;
+	bool bContinue = TRUE;
 	for ( size_t i=nStartIndex ; bContinue && i<staff.mObjArray.GetCount() ; i++ )
 	{
 		CObj* pObj = staff.mObjArray[i];
@@ -1103,12 +1105,12 @@ inline	void XMLSaver::Save(CXMLWriter& writer, const CStaff& staff, int nMeasure
 
 	m_strEnding.Empty();
 	int nLyricIndex = 0;
-	BOOL bCreateNewMeasure = FALSE;
+	bool bCreateNewMeasure = FALSE;
 	int nStartIndex = -1;
 	m_nVoice = 0;
 	m_nSlurNo = 1;
 	int nMeasureDuration = 0;
-	BOOL bSaveNote = FALSE;
+	bool bSaveNote = FALSE;
 	for ( size_t i=0 ; i<staff.mObjArray.GetCount() ; i++ )
 	{
 		CObj* pObj = staff.mObjArray[i];
@@ -1355,7 +1357,7 @@ const wxChar* GetGMPatchName(int nPatch)
 	return _T("");
 }
 
-BOOL	XMLSaver::Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_VERSION nVersion)
+bool	XMLSaver::Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_VERSION nVersion)
 {
 	m_nVersion = nVersion;
 
@@ -1393,15 +1395,14 @@ BOOL	XMLSaver::Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_V
 			if ( pNWCObj->strCopyright2.Length() )
 				writer.WriteString(_T("rights"), pNWCObj->strCopyright2);
 
-			WIN32_FILE_ATTRIBUTE_DATA wfad;
-			GetFileAttributesEx(szNWCFile, GetFileExInfoStandard, &wfad);
-			SYSTEMTIME st, lt;
-			FileTimeToSystemTime(&wfad.ftLastWriteTime, &st);
-			SystemTimeToTzSpecificLocalTime(NULL, &st, &lt);
+			wxFileName fn(szNWCFile);
+			wxDateTime dtUTC = fn.GetModificationTime();
+			wxDateTime dtLocal = dtUTC.ToTimezone(wxDateTime::TimeZone(wxDateTime::Local));
+			//SystemTimeToTzSpecificLocalTime(NULL, &st, &lt);
 
 			writer.WriteKeyStart(_T("encoding"));
 				writer.WriteString(_T("software"), _T("Noteworthy Composer"));
-				str.Printf(_T("%04d-%02d-%02d"), lt.wYear, lt.wMonth, lt.wDay);
+				str.Printf(_T("%04d-%02d-%02d"), dtLocal.GetYear(), dtLocal.GetMonth(), dtLocal.GetDay());
 				writer.WriteString(_T("encoding-date"), str);
 			writer.WriteKeyEnd();
 

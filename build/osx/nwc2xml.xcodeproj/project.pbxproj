@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8AC924971567FA9300C9F697 /* nwc2xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC924891567FA9300C9F697 /* nwc2xml.cpp */; };
+		8AC924981567FA9300C9F697 /* nwcfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9248B1567FA9300C9F697 /* nwcfile.cpp */; };
+		8AC924991567FA9300C9F697 /* nwcobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9248D1567FA9300C9F697 /* nwcobj.cpp */; };
+		8AC9249A1567FA9300C9F697 /* Precompile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9248F1567FA9300C9F697 /* Precompile.cpp */; };
+		8AC9249B1567FA9300C9F697 /* xmlsaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC924931567FA9300C9F697 /* xmlsaver.cpp */; };
+		8AC9249C1567FA9300C9F697 /* xmlwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AC924951567FA9300C9F697 /* xmlwriter.cpp */; };
+		8AC925A815681B8100C9F697 /* libwx_mac_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC925A515681B7400C9F697 /* libwx_mac_static.a */; };
+		8AC9275415681BFF00C9F697 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9274B15681BFF00C9F697 /* AppKit.framework */; };
+		8AC9275515681BFF00C9F697 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9274C15681BFF00C9F697 /* WebKit.framework */; };
+		8AC9275615681BFF00C9F697 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9274D15681BFF00C9F697 /* AGL.framework */; };
+		8AC9275715681BFF00C9F697 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9274E15681BFF00C9F697 /* OpenGL.framework */; };
+		8AC9275815681BFF00C9F697 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9274F15681BFF00C9F697 /* QuickTime.framework */; };
+		8AC9275915681BFF00C9F697 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9275015681BFF00C9F697 /* Carbon.framework */; };
+		8AC9275A15681BFF00C9F697 /* System.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9275115681BFF00C9F697 /* System.framework */; };
+		8AC9275B15681BFF00C9F697 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9275215681BFF00C9F697 /* libz.dylib */; };
+		8AC9275C15681BFF00C9F697 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9275315681BFF00C9F697 /* libiconv.dylib */; };
+		8AC9281D15681C5100C9F697 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC9281C15681C5100C9F697 /* IOKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8AC925A415681B7400C9F697 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AC9259E15681B7400C9F697 /* wxWindows.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4086C8CB063AB30000D4CD53;
+			remoteInfo = static;
+		};
+		8AC925A615681B7400C9F697 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AC9259E15681B7400C9F697 /* wxWindows.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4086CBE1063AB30000D4CD53;
+			remoteInfo = dynamic;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76F690486A84900D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8AC924881567FA9300C9F697 /* nwc2xml-version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nwc2xml-version.h"; sourceTree = "<group>"; };
+		8AC924891567FA9300C9F697 /* nwc2xml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nwc2xml.cpp; sourceTree = "<group>"; };
+		8AC9248B1567FA9300C9F697 /* nwcfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nwcfile.cpp; sourceTree = "<group>"; };
+		8AC9248C1567FA9300C9F697 /* nwcfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nwcfile.h; sourceTree = "<group>"; };
+		8AC9248D1567FA9300C9F697 /* nwcobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nwcobj.cpp; sourceTree = "<group>"; };
+		8AC9248E1567FA9300C9F697 /* nwcobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nwcobj.h; sourceTree = "<group>"; };
+		8AC9248F1567FA9300C9F697 /* Precompile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Precompile.cpp; sourceTree = "<group>"; };
+		8AC924901567FA9300C9F697 /* Precompile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Precompile.h; sourceTree = "<group>"; };
+		8AC924911567FA9300C9F697 /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; };
+		8AC924921567FA9300C9F697 /* TVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVector.h; sourceTree = "<group>"; };
+		8AC924931567FA9300C9F697 /* xmlsaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsaver.cpp; sourceTree = "<group>"; };
+		8AC924941567FA9300C9F697 /* xmlsaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsaver.h; sourceTree = "<group>"; };
+		8AC924951567FA9300C9F697 /* xmlwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlwriter.cpp; sourceTree = "<group>"; };
+		8AC924961567FA9300C9F697 /* xmlwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlwriter.h; sourceTree = "<group>"; };
+		8AC9259E15681B7400C9F697 /* wxWindows.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = wxWindows.xcodeproj; path = "../../../wxWidgets-2.8/src/wxWindows.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		8AC9274B15681BFF00C9F697 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		8AC9274C15681BFF00C9F697 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
+		8AC9274D15681BFF00C9F697 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		8AC9274E15681BFF00C9F697 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		8AC9274F15681BFF00C9F697 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		8AC9275015681BFF00C9F697 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		8AC9275115681BFF00C9F697 /* System.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = System.framework; path = /System/Library/Frameworks/System.framework; sourceTree = "<absolute>"; };
+		8AC9275215681BFF00C9F697 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
+		8AC9275315681BFF00C9F697 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = /usr/lib/libiconv.dylib; sourceTree = "<absolute>"; };
+		8AC9281C15681C5100C9F697 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		8DD76F6C0486A84900D96B5E /* nwc2xml */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nwc2xml; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76F660486A84900D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AC925A815681B8100C9F697 /* libwx_mac_static.a in Frameworks */,
+				8AC9275415681BFF00C9F697 /* AppKit.framework in Frameworks */,
+				8AC9275515681BFF00C9F697 /* WebKit.framework in Frameworks */,
+				8AC9275615681BFF00C9F697 /* AGL.framework in Frameworks */,
+				8AC9275715681BFF00C9F697 /* OpenGL.framework in Frameworks */,
+				8AC9275815681BFF00C9F697 /* QuickTime.framework in Frameworks */,
+				8AC9275915681BFF00C9F697 /* Carbon.framework in Frameworks */,
+				8AC9275A15681BFF00C9F697 /* System.framework in Frameworks */,
+				8AC9275B15681BFF00C9F697 /* libz.dylib in Frameworks */,
+				8AC9275C15681BFF00C9F697 /* libiconv.dylib in Frameworks */,
+				8AC9281D15681C5100C9F697 /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* nwc2xml */ = {
+			isa = PBXGroup;
+			children = (
+				8AC9259E15681B7400C9F697 /* wxWindows.xcodeproj */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				8AC9274A15681BFF00C9F697 /* External Frameworks and Libraries */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = nwc2xml;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				8AC924871567FA9300C9F697 /* src */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76F6C0486A84900D96B5E /* nwc2xml */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8AC924871567FA9300C9F697 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				8AC924881567FA9300C9F697 /* nwc2xml-version.h */,
+				8AC924891567FA9300C9F697 /* nwc2xml.cpp */,
+				8AC9248B1567FA9300C9F697 /* nwcfile.cpp */,
+				8AC9248C1567FA9300C9F697 /* nwcfile.h */,
+				8AC9248D1567FA9300C9F697 /* nwcobj.cpp */,
+				8AC9248E1567FA9300C9F697 /* nwcobj.h */,
+				8AC9248F1567FA9300C9F697 /* Precompile.cpp */,
+				8AC924901567FA9300C9F697 /* Precompile.h */,
+				8AC924911567FA9300C9F697 /* resource.h */,
+				8AC924921567FA9300C9F697 /* TVector.h */,
+				8AC924931567FA9300C9F697 /* xmlsaver.cpp */,
+				8AC924941567FA9300C9F697 /* xmlsaver.h */,
+				8AC924951567FA9300C9F697 /* xmlwriter.cpp */,
+				8AC924961567FA9300C9F697 /* xmlwriter.h */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		8AC9259F15681B7400C9F697 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8AC925A515681B7400C9F697 /* libwx_mac_static.a */,
+				8AC925A715681B7400C9F697 /* libwx_mac.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8AC9274A15681BFF00C9F697 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8AC9274B15681BFF00C9F697 /* AppKit.framework */,
+				8AC9274C15681BFF00C9F697 /* WebKit.framework */,
+				8AC9274D15681BFF00C9F697 /* AGL.framework */,
+				8AC9274E15681BFF00C9F697 /* OpenGL.framework */,
+				8AC9274F15681BFF00C9F697 /* QuickTime.framework */,
+				8AC9275015681BFF00C9F697 /* Carbon.framework */,
+				8AC9275115681BFF00C9F697 /* System.framework */,
+				8AC9275215681BFF00C9F697 /* libz.dylib */,
+				8AC9275315681BFF00C9F697 /* libiconv.dylib */,
+				8AC9281C15681C5100C9F697 /* IOKit.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76F620486A84900D96B5E /* nwc2xml */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "nwc2xml" */;
+			buildPhases = (
+				8DD76F640486A84900D96B5E /* Sources */,
+				8DD76F660486A84900D96B5E /* Frameworks */,
+				8DD76F690486A84900D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nwc2xml;
+			productInstallPath = "$(HOME)/bin";
+			productName = nwc2xml;
+			productReference = 8DD76F6C0486A84900D96B5E /* nwc2xml */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "nwc2xml" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* nwc2xml */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8AC9259F15681B7400C9F697 /* Products */;
+					ProjectRef = 8AC9259E15681B7400C9F697 /* wxWindows.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8DD76F620486A84900D96B5E /* nwc2xml */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8AC925A515681B7400C9F697 /* libwx_mac_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwx_mac_static.a;
+			remoteRef = 8AC925A415681B7400C9F697 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8AC925A715681B7400C9F697 /* libwx_mac.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libwx_mac.dylib;
+			remoteRef = 8AC925A615681B7400C9F697 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76F640486A84900D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AC924971567FA9300C9F697 /* nwc2xml.cpp in Sources */,
+				8AC924981567FA9300C9F697 /* nwcfile.cpp in Sources */,
+				8AC924991567FA9300C9F697 /* nwcobj.cpp in Sources */,
+				8AC9249A1567FA9300C9F697 /* Precompile.cpp in Sources */,
+				8AC9249B1567FA9300C9F697 /* xmlsaver.cpp in Sources */,
+				8AC9249C1567FA9300C9F697 /* xmlwriter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB923208733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					_DEBUG_OUT,
+					__WXMAC__,
+					_MAC,
+					MACOS,
+					WXUSINGSTATICLIBS,
+					UNICODE,
+					"_FILE_OFFSET_BITS=64",
+					_LARGE_FILES,
+					NO_GCC_PRAGMA,
+					__WXMAC_XCODE__,
+				);
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"$(WX_PLATFORM)\"",
+					"\"$(WXWIDGETS)/include\"",
+				);
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = nwc2xml;
+				WXWIDGETS = "$(HOME)/projects/tools/source/wxWidgets-2.8";
+				WX_PLATFORM = "$(WXWIDGETS)/src/build/include";
+			};
+			name = Debug;
+		};
+		1DEB923308733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__WXMAC__,
+					_MAC,
+					MACOS,
+					WXUSINGSTATICLIBS,
+					UNICODE,
+					"_FILE_OFFSET_BITS=64",
+					_LARGE_FILES,
+					NO_GCC_PRAGMA,
+					__WXMAC_XCODE__,
+				);
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"$(WX_PLATFORM)\"",
+					"\"$(WXWIDGETS)/include\"",
+				);
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = nwc2xml;
+				WXWIDGETS = "$(HOME)/projects/tools/source/wxWidgets-2.8";
+				WX_PLATFORM = "$(WXWIDGETS)/src/build/include";
+			};
+			name = Release;
+		};
+		1DEB923608733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../src/Precompile.h;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+				STRIP_INSTALLED_PRODUCT = NO;
+			};
+			name = Debug;
+		};
+		1DEB923708733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../../src/Precompile.h;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "nwc2xml" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923208733DC60010E9CD /* Debug */,
+				1DEB923308733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "nwc2xml" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923608733DC60010E9CD /* Debug */,
+				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

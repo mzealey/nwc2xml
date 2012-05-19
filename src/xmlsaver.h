@@ -21,13 +21,13 @@ public:
 		MXML_11	= 0x101,
 	} MXML_VERSION;
 
-	BOOL	Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_VERSION nVersion=MXML_10);
+	bool	Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_VERSION nVersion=MXML_10);
 
 protected:
 
 	inline	void	SaveClef(CXMLWriter& xw, const CClefObj& obj);
 	inline	void	SaveKeySig(CXMLWriter& xw, const CKeySigObj& obj);
-	inline	void	SaveBarLine(CXMLWriter& xw, const CBarLineObj& obj, int& nMeasurement, BOOL bNewMeasure,
+	inline	void	SaveBarLine(CXMLWriter& xw, const CBarLineObj& obj, int& nMeasurement, bool bNewMeasure,
 								CObj *const * pNext, CObj *const * pLast);
 	inline	void	SaveEnding(CXMLWriter& xw, const CEndingObj& obj);
 	inline	void	SaveInstrument(CXMLWriter& xw, const CInstrumentObj& obj);
