@@ -49,5 +49,19 @@ inline long MulDiv(long a, long b, long c) { return a*b/c; }
 #define	ERROR_INVALID_VERSION	100
 #define	ERROR_INVALID_STAFF		101
 
+#define	ReadBytes(f, x)	( f.Read(&x, sizeof(x)) == sizeof(x) )
+
+#include "nwcendian.h"
+
+// read little endian data
+inline bool ReadLEShort(wxFile& f, short& data)
+{
+	bool bResult = f.Read(&data, sizeof(data)) == sizeof(data);
+	if ( bResult )
+	{
+		data = LE2HostS(data);
+	}
+	return bResult;
+}
 
 #endif // !defined(__Precompile_H__)

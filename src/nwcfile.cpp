@@ -154,7 +154,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		return ERROR_INVALID_DATA;
 	}
 
-	if ( sizeof(nVersion) != in.Read(&nVersion, sizeof(nVersion)) )
+	if ( !ReadLEShort(in, nVersion) )
 	{
 		wxFprintf(stderr, _T("unexpected EOF while reading version\n"));
 		wxASSERT(false);
@@ -173,7 +173,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 	long nPos = in.Tell();
 	char _szHeader2[4] = "\x02\x00\x00";							// implies NUL at last
-	if ( sizeof(btUnknown2) != in.Read(btUnknown2, sizeof(btUnknown2)) ||
+	if ( !ReadBytes(in, btUnknown2) ||
 		 btUnknown2[0] != _szHeader2[0] || btUnknown2[1] != _szHeader2[1] || btUnknown2[3] != _szHeader2[3] )
 	{
 		//wxFprintf(stderr, "invalid btUnknown2 at 0x%08x\n", nPos);
@@ -203,7 +203,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	}
 
 	short nUnknown4;
-	if ( sizeof(nUnknown4) != in.Read(&nUnknown4, sizeof(nUnknown4)) )
+	if ( !ReadBytes(in, nUnknown4) )
 	{
 		wxFprintf(stderr, _T("unexpected EOF while reading\n"));
 		wxASSERT(false);
@@ -227,9 +227,13 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 	nPos = in.Tell();
 	char _szReserved5[] = "\x5F\x00\x46\x32\x00";
-	UINT nCount = 11;//offsetof(CNWCFile, strMarginTop) - offsetof(CNWCFile, chExtendLastSystem);
-	if ( nCount != (UINT)in.Read(&chExtendLastSystem, nCount) ||
-		 memcmp(_szReserved5, btUnknown3, sizeof(btUnknown3)) != 0 )
+	bool bResult = ReadBytes(in, chExtendLastSystem) &&
+				   ReadBytes(in, chIncreaseNoteSpacing) &&
+				   ReadBytes(in, btUnknown3) &&
+				   ReadBytes(in, btMeasureNumbers) &&
+				   ReadBytes(in, btUnknown4) &&
+				   ReadLEShort(in, nMeasureStart);
+	if ( !bResult || memcmp(_szReserved5, btUnknown3, sizeof(btUnknown3)) != 0 )
 	{
 //		wxFprintf(stderr, "invalid szReserved5 at 0x%08x\n", nPos);
 //		wxASSERT(false);
@@ -250,19 +254,19 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 	wxFprintf(out, _T("margin:%s %s %s %s\n"), strMarginTop.c_str(), strMarginInside.c_str(), strMarginOutside.c_str(), strMarginBottom.c_str());
 
-	in.Read(&bMirrorMargin, sizeof(bMirrorMargin));
+	ReadBytes(in, bMirrorMargin);
 	wxFprintf(out, _T("mirrormargin:%d\n"), bMirrorMargin);
 
 	nPos = in.Tell();
-	if ( sizeof(btUnknown5) != in.Read(&btUnknown5, sizeof(btUnknown5)) )
+	if ( !ReadBytes(in, btUnknown5) )
 	{
 		return ERROR_INVALID_DATA;
 	}
 
 	if ( nVersion > NWC_Version130 )
 	{
-		in.Read(&nGroupVisibility, sizeof(nGroupVisibility));
-		in.Read(&bAllowLayering, sizeof(bAllowLayering));
+		ReadBytes(in, nGroupVisibility);
+		ReadBytes(in, bAllowLayering);
 		wxFprintf(out, _T("group visibility:"));
 		CObj::DumpBinary(out, nGroupVisibility, sizeof(nGroupVisibility), false);
 		wxFprintf(out, _T("\nallowlayering:%d\n"), bAllowLayering);
@@ -273,7 +277,7 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 	//	strNotationTypeface = LoadStringNULTerminated(in);
 	//	wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
 	//}
-	in.Read(&nStaffHeight, sizeof(nStaffHeight));
+	ReadLEShort(in, nStaffHeight);
 	wxFprintf(out, _T("staffheight=%d\n"), nStaffHeight);
 
 	nPos = in.Tell();
@@ -317,9 +321,9 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		mFontInfos[i].Dump(out, i);
 	}
 
-	in.Read(&btTitlePageInfo, sizeof(btTitlePageInfo));
-	in.Read(&btStaffLabels, sizeof(btStaffLabels));	// index of [None, First Systems, Top Systems, All Systems]
-	in.Read(&nStartPageNo, sizeof(nStartPageNo));
+	ReadBytes(in, btTitlePageInfo);
+	ReadBytes(in, btStaffLabels);	// index of [None, First Systems, Top Systems, All Systems]
+	ReadLEShort(in, nStartPageNo);
 	if ( nVersion >= NWC_Version200 )
 	{
 		unsigned char ch;
@@ -328,9 +332,9 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 		if ( ch != 0xFF )
 			in.Seek(-1, wxFromCurrent);
-		//in.Read(&btJustifyPrintedSystemVertically, sizeof(btJustifyPrintedSystemVertically));
+		//ReadBytes(in, btJustifyPrintedSystemVertically);
 	}
-	in.Read(&nStaffCount, sizeof(nStaffCount));
+	ReadLEShort(in, nStaffCount);
 	wxFprintf(out, _T("titlepageinfo=%d\n"), btTitlePageInfo);
 	wxFprintf(out, _T("stafflabels=%s\n"), GetStaffLabelsAsString(btStaffLabels));
 	wxFprintf(out, _T("startpageno=%d\n"), nStartPageNo);

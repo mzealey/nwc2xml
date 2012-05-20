@@ -286,6 +286,10 @@
 			Name="NWC"
 			>
 			<File
+				RelativePath="..\..\src\nwcendian.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\nwcfile.cpp"
 				>
 			</File>

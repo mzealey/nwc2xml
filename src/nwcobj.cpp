@@ -74,7 +74,7 @@ bool CObj::Load( wxFile& file )
 {
 	bool bResult = true;
 	if ( GetLoadedVersion() >= NWC_Version170 )
-		bResult = file.Read(&mVisible, sizeof(mVisible)) != 0;
+		bResult = ReadBytes(file, mVisible);
 	else
 	{
 		mVisible = 0;
@@ -109,7 +109,8 @@ bool CClefObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mClefType, sizeof(mClefType)+sizeof(mOctaveShift)) != 0;
+	bResult = ReadLEShort(file, mClefType) &&
+			  ReadLEShort(file, mOctaveShift);
 	if ( bResult == false )
 		return false;
 
@@ -243,7 +244,10 @@ bool CKeySigObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mFlat, sizeof(mFlat)+sizeof(mData2)+sizeof(mSharp)+sizeof(mData3)) != 0;
+	bResult = ReadBytes(file, mFlat) &&
+			  ReadBytes(file, mData2) &&
+			  ReadBytes(file, mSharp) &&
+			  ReadBytes(file, mData3);
 
 	return bResult;
 }
@@ -273,7 +277,8 @@ bool CBarLineObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mStyle, sizeof(mStyle)+sizeof(mLocalRepeatCount)) != 0;
+	bResult = ReadBytes(file, mStyle) &&
+			  ReadBytes(file, mLocalRepeatCount);
 
 	return bResult;
 }
@@ -319,7 +324,8 @@ bool CEndingObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mStyle, sizeof(mStyle)+sizeof(mData2)) != 0;
+	bResult = ReadBytes(file, mStyle) &&
+			  ReadBytes(file, mData2);
 
 	return bResult;
 }
@@ -361,18 +367,18 @@ bool CInstrumentObj::Load(wxFile& file)
 	if ( GetLoadedVersion() < NWC_Version170 )
 	{
 		mData1[6] = mData1[7] = 0;
-		bResult = file.Read(mData1, 6) != 0;
+		bResult = file.Read(mData1, 6) == 6;
 	}
 	else if ( GetLoadedVersion() < NWC_Version200 )
 	{
-		bResult = file.Read(mData1, sizeof(mData1)) != 0;
+		bResult = ReadBytes(file, mData1);
 	}
 	else
 	{
-		bResult = file.Read(mData1, sizeof(mData1)) != 0;
+		bResult = ReadBytes(file, mData1);
 		mName = LoadStringNULTerminated(file);
-		bResult = file.Read(mData2, sizeof(mData2)) != 0;
-		bResult = file.Read(mVelocity, sizeof(mVelocity)) != 0;
+		bResult = ReadBytes(file, mData2);
+		bResult = ReadBytes(file, mVelocity);
 	}
 
 	return bResult;
@@ -390,7 +396,9 @@ bool CTimeSigObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mBit_Measure, sizeof(mBit_Measure)+sizeof(mBits)+sizeof(mStyle)) != 0;
+	bResult = ReadLEShort(file, mBit_Measure) &&
+			  ReadLEShort(file, mBits) &&
+			  ReadLEShort(file, mStyle);
 
 	return bResult;
 }
@@ -414,12 +422,15 @@ bool CTempoObj::Load(wxFile& file)
 {
 	bool bResult = CObj::Load(file);
 
-	bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mTempoValue)+sizeof(mBase)) != 0;
+	bResult = ReadBytes(file, mPos) &&
+			  ReadBytes(file, mPlacement) &&
+			  ReadLEShort(file, mTempoValue) &&
+			  ReadBytes(file, mBase);
 	if ( GetLoadedVersion() < NWC_Version170 )
 	{
 		// old version has mBase as short & one NUL 
 		short bTemp;
-		bResult = file.Read(&bTemp, sizeof(bTemp)) != 0;
+		bResult = ReadLEShort(file, bTemp);
 	}
 
 	mText = LoadStringNULTerminated(file);
@@ -481,15 +492,19 @@ bool CDynamicObj::Load(wxFile& file)
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)+sizeof(mNoteVelocity)+sizeof(mMIDIVolume)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle) &&
+				  ReadLEShort(file, mNoteVelocity) &&
+				  ReadLEShort(file, mMIDIVolume);
 	}
 	else
 	{
 		mStyle = 0;
-		bResult = file.Read(&mPlacement, sizeof(mPlacement)) != 0 &&
-				  file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&mNoteVelocity, sizeof(mNoteVelocity)) != 0 &&
-				  file.Read(&mMIDIVolume, sizeof(mMIDIVolume)) != 0;
+		bResult = ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mPos) &&
+				  ReadLEShort(file, mNoteVelocity) &&
+				  ReadLEShort(file, mMIDIVolume);
 		mStyle = mPlacement & 0x07;
 		mPlacement = mPlacement & (~0x07);	// 0x10 : Preserve Width
 	}
@@ -549,14 +564,27 @@ bool CNoteObj::Load(wxFile& file)
 	bool bResult = CObj::Load(file);
 
 	if ( m_pParent->m_pParent->nVersion <= NWC_Version170 )
-		bResult = file.Read(&mDuration, sizeof(mDuration)+sizeof(mData2)+sizeof(mAttribute1)+sizeof(mPos)+sizeof(mAttribute2)+sizeof(mData3)) != 0;
+	{
+		bResult = ReadBytes(file, mDuration) &&
+				  ReadBytes(file, mData2) &&
+				  ReadBytes(file, mAttribute1) &&
+				  ReadBytes(file, mPos) &&
+				  ReadBytes(file, mAttribute2) &&
+				  ReadBytes(file, mData3);
+	}
 	else
-		bResult = file.Read(&mDuration, sizeof(mDuration)+sizeof(mData2)+sizeof(mAttribute1)+sizeof(mPos)+sizeof(mAttribute2)) != 0;
+	{
+		bResult = ReadBytes(file, mDuration) &&
+				  ReadBytes(file, mData2) &&
+				  ReadBytes(file, mAttribute1) &&
+				  ReadBytes(file, mPos) &&
+				  ReadBytes(file, mAttribute2);
+	}
 
 	mStemLength = 7;
 	if ( m_pParent->m_pParent->nVersion >= NWC_Version200 && (mAttribute2[0] & 0x40) != 0 )
 	{
-		bResult = file.Read(&mStemLength, sizeof(mStemLength)) != 0;
+		bResult = ReadBytes(file, mStemLength);
 	}
 
 	return bResult;
@@ -799,13 +827,15 @@ bool CRestObj::Load(wxFile& file)
 
 	if ( m_pParent->m_pParent->nVersion <= NWC_Version150 )
 	{
-		bResult = file.Read(&mDuration, sizeof(mDuration)) != 0;
-		bResult = file.Read(&mData2, 5) != 0;
+		bResult = ReadBytes(file, mDuration) &&
+				  file.Read(&mData2, 5) == 5;
 		mOffset = mData2[4];
 	}
 	else
 	{
-		bResult = file.Read(&mDuration, sizeof(mDuration)+sizeof(mData2)+sizeof(mOffset)) != 0;
+		bResult = ReadBytes(file, mDuration) &&
+				  ReadBytes(file, mData2) &&
+				  ReadLEShort(file, mOffset);
 	}
 
 	return bResult;
@@ -907,17 +937,17 @@ bool CNoteCMObj::Load(wxFile& file)
 	bool bResult = CObj::Load(file);
 
 	if ( m_pParent->m_pParent->nVersion <= NWC_Version170 )
-		bResult = file.Read(&mData1, sizeof(mData1)) != 0;
+		bResult = ReadBytes(file, mData1);
 	else
-		bResult = file.Read(&mData1, 8) != 0;
+		bResult = file.Read(&mData1, 8) == 8;
 
 	mStemLength = 7;
 	if ( m_pParent->m_pParent->nVersion >= NWC_Version200 && (mData1[7] & 0x40) != 0 )
 	{
-		bResult = file.Read(&mStemLength, sizeof(mStemLength)) != 0;
+		bResult = ReadBytes(file, mStemLength);
 	}
 
-	bResult = file.Read(&mCount, sizeof(mCount)) != 0;
+	bResult = ReadLEShort(file, mCount);
 
 	return bResult;
 }
@@ -981,21 +1011,23 @@ bool CPedalObj::Load(wxFile& file)
 	NWC_Version nVersion = GetLoadedVersion();
 	if ( nVersion >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle);
 	}
 	else if ( nVersion <= NWC_Version155 )
 	{
 		char unknown = 0;
-		bResult = file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&unknown, sizeof(unknown)) != 0 &&
-				  file.Read(&mPlacement, sizeof(mPlacement)) != 0 &&
-				  file.Read(&mStyle, sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, unknown) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle);
 	}
 	else
 	{
 		mPlacement = 0;
-		bResult = file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&mStyle, sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mStyle);
 	}
 
 	return bResult;
@@ -1038,12 +1070,16 @@ bool CFlowDirObj::Load(wxFile& file)
 	bool bResult = CObj::Load(file);
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)) != 0;
+	{
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadLEShort(file, mStyle);
+	}
 	else
 	{
 		mPos = -8;
 		mPlacement = 0x01;
-		bResult = file.Read(&mStyle, sizeof(mStyle)) != 0;
+		bResult = ReadLEShort(file, mStyle);
 	}
 
 	return bResult;
@@ -1087,13 +1123,15 @@ bool CMPCObj::Load(wxFile& file)
 
 	if ( m_pParent->m_pParent->nVersion <= NWC_Version155 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)) != 0;
-		bResult = file.Read(&mPlacement, sizeof(mPlacement)) != 0;
-		bResult = file.Read(&mData1, 0x1E) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  file.Read(&mData1, 0x1E) == 0x1E;
 	}
 	else
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mData1)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mData1);
 	}
 
 	return bResult;
@@ -1115,15 +1153,18 @@ bool CTempVarObj::Load(wxFile& file)
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)+sizeof(mDelay)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle) &&
+				  ReadBytes(file, mDelay);
 	}
 	else
 	{
 		mPlacement = 0;
-		bResult = file.Read(&mStyle, sizeof(mStyle)) != 0 &&
-				  file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&mPlacement, sizeof(mPlacement)) != 0 &&
-				  file.Read(&mDelay, sizeof(mDelay)) != 0;
+		bResult = ReadBytes(file, mStyle) &&
+				  ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mDelay);
 		mStyle = mStyle & 0x0F;
 	}
 
@@ -1164,13 +1205,15 @@ bool CDynVarObj::Load(wxFile& file)
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle);
 	}
 	else
 	{
 		mPlacement = 0;
-		bResult = file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&mStyle, sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mStyle);
 	}
 
 	return bResult;
@@ -1209,13 +1252,15 @@ bool CPerformObj::Load(wxFile& file)
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)+sizeof(mPlacement)+sizeof(mStyle)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mPlacement) &&
+				  ReadBytes(file, mStyle);
 	}
 	else
 	{
 		mPlacement = 0;
-		bResult = file.Read(&mStyle, sizeof(mStyle)) != 0 &&
-				  file.Read(&mPos, sizeof(mPos)) != 0;
+		bResult = ReadBytes(file, mStyle) &&
+				  ReadBytes(file, mPos);
 	}
 
 	return bResult;
@@ -1256,9 +1301,9 @@ bool CTextObj::Load(wxFile& file)
 
 	if ( GetLoadedVersion() >= NWC_Version170 )
 	{
-		bResult = file.Read(&mPos, sizeof(mPos)) != 0 &&
-				  file.Read(&mData, sizeof(mData)) != 0 &&
-				  file.Read(&mFont, sizeof(mFont)) != 0;
+		bResult = ReadBytes(file, mPos) &&
+				  ReadBytes(file, mData) &&
+				  ReadBytes(file, mFont);
 		BF170* pBF170 = (BF170*)&mData;
 		mPreserveWidth = pBF170->bPreserveWidth;
 		mJustification = pBF170->nJustification;
@@ -1267,8 +1312,8 @@ bool CTextObj::Load(wxFile& file)
 	else
 	{
 		// 1.55
-		bResult = file.Read(&mFont, sizeof(mFont)) != 0 &&
-				  file.Read(&mPos, sizeof(mPos)) != 0;
+		bResult = ReadBytes(file, mFont) &&
+				  ReadBytes(file, mPos);
 		mPreserveWidth = mFont >> 4;
 		mFont = mFont & 0x0F;
 	}
@@ -1296,7 +1341,7 @@ bool CRestCMObj::Load(wxFile& file)
 {
 	bool bResult = CRestObj::Load(file);
 
-	bResult = file.Read(&mCount, sizeof(mCount)) != 0;
+	bResult = ReadLEShort(file, mCount);
 
 	return bResult;
 }
@@ -1368,7 +1413,7 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 	long nPos = in.Tell();
 
 	short objType;
-	if ( in.Read(&objType, sizeof(objType)) == false )
+	if ( ReadLEShort(in, objType) == false )
 	{
 		fprintf(stderr, "unexpected end of file\n");
 		if ( wxIsDebuggerRunning() ) MyTrap();
@@ -1552,12 +1597,31 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 	memset(&mStaffInfo, 0, sizeof(mStaffInfo));
 
+	bool bResult = false;
 	if ( m_pParent->nVersion <= NWC_Version130 )
 	{
 		staff130 staff;
 		memset(&staff, 0, sizeof(staff));
-		UINT nCount = offsetof(staff130, nLyricBlockSizeInByte);
-		if ( nCount != (UINT)in.Read(&staff, nCount) )
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+				  ReadBytes(in, staff.btMuted) &&
+				  ReadBytes(in, staff.btReserved1) &&
+				  ReadBytes(in, staff.btChannel) &&
+				  ReadBytes(in, staff.btReserved2) &&
+				  ReadBytes(in, staff.btPlaybackDevice) &&
+				  ReadBytes(in, staff.btReserved3) &&
+				  ReadBytes(in, staff.btSelectPatchBank) &&
+				  ReadBytes(in, staff.btReserved4) &&
+				  ReadBytes(in, staff.btPatchName) &&
+				  ReadLEShort(in, staff.nStyle) &&
+				  ReadLEShort(in, staff.nVerticalSizeUpper) &&
+				  ReadLEShort(in, staff.nVerticalSizeLower) &&
+				  ReadLEShort(in, staff.nLayerWithNextStaff) &&
+				  ReadLEShort(in, staff.nPartVolume) &&
+				  ReadLEShort(in, staff.nStereoPan) &&
+				  ReadBytes(in, staff.btReserved6) &&
+				  ReadBytes(in, staff.btColor) &&
+				  ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		mStaffInfo.btEndingBar = staff.btEndingBar;
@@ -1590,8 +1654,27 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 	{
 		staff150 staff;
 		memset(&staff, 0, sizeof(staff));
-		UINT nCount = offsetof(staff150, nAlignment) - offsetof(staff150, btEndingBar);
-		if ( nCount != (UINT)in.Read(&staff, nCount) )
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+			ReadBytes(in, staff.btMuted) &&
+			ReadBytes(in, staff.btReserved1) &&
+			ReadBytes(in, staff.btChannel) &&
+			ReadBytes(in, staff.btReserved2) &&
+			ReadBytes(in, staff.btPlaybackDevice) &&
+			ReadBytes(in, staff.btReserved3) &&
+			ReadBytes(in, staff.btSelectPatchBank) &&
+			ReadBytes(in, staff.btReserved4) &&
+			ReadBytes(in, staff.btPatchName) &&
+			ReadLEShort(in, staff.nStyle) &&
+			ReadLEShort(in, staff.nVerticalSizeUpper) &&
+			ReadLEShort(in, staff.nVerticalSizeLower) &&
+			ReadLEShort(in, staff.nLayerWithNextStaff) &&
+			ReadLEShort(in, staff.nTransposition) &&
+			ReadLEShort(in, staff.nPartVolume) &&
+			ReadLEShort(in, staff.nStereoPan) &&
+			ReadBytes(in, staff.btReserved6) &&
+			ReadBytes(in, staff.btColor) &&
+			ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		mStaffInfo.btEndingBar = staff.btEndingBar;
@@ -1621,8 +1704,9 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 		if ( mStaffInfo.nNumLyric )
 		{
-			UINT nCount1 = offsetof(staff175, nLyricBlockSizeInByte) - offsetof(staff175, nAlignment);
-			if ( nCount1 != (UINT)in.Read(&mStaffInfo.nAlignment, nCount1) )
+			bResult = ReadLEShort(in, mStaffInfo.nAlignment) &&
+					  ReadLEShort(in, mStaffInfo.nStaffOffset);
+			if ( !bResult )
 				return false;
 		}
 	}
@@ -1630,8 +1714,28 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 	{
 		staff155 staff;
 		memset(&staff, 0, sizeof(staff));
-		UINT nCount = offsetof(staff155, nAlignment) - offsetof(staff155, btEndingBar);
-		if ( nCount != (UINT)in.Read(&staff, nCount) )
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+			ReadBytes(in, staff.btMuted) &&
+			ReadBytes(in, staff.btReserved1) &&
+			ReadBytes(in, staff.btChannel) &&
+			ReadBytes(in, staff.btReserved2) &&
+			ReadBytes(in, staff.btPlaybackDevice) &&
+			ReadBytes(in, staff.btReserved3) &&
+			ReadBytes(in, staff.btSelectPatchBank) &&
+			ReadBytes(in, staff.btReserved4) &&
+			ReadBytes(in, staff.btPatchName) &&
+			ReadBytes(in, staff.btReserved5) &&
+			ReadLEShort(in, staff.nStyle) &&
+			ReadLEShort(in, staff.nVerticalSizeUpper) &&
+			ReadLEShort(in, staff.nVerticalSizeLower) &&
+			ReadLEShort(in, staff.nLayerWithNextStaff) &&
+			ReadLEShort(in, staff.nTransposition) &&
+			ReadLEShort(in, staff.nPartVolume) &&
+			ReadLEShort(in, staff.nStereoPan) &&
+			ReadBytes(in, staff.btReserved6) &&
+			ReadBytes(in, staff.btColor) &&
+			ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		mStaffInfo.btEndingBar = staff.btEndingBar;
@@ -1665,8 +1769,9 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 		if ( mStaffInfo.nNumLyric )
 		{
-			UINT nCount1 = offsetof(staff175, nLyricBlockSizeInByte) - offsetof(staff175, nAlignment);
-			if ( nCount1 != (UINT)in.Read(&mStaffInfo.nAlignment, nCount1) )
+			bResult = ReadLEShort(in, mStaffInfo.nAlignment) &&
+					  ReadLEShort(in, mStaffInfo.nStaffOffset);
+			if ( !bResult )
 				return false;
 		}
 	}
@@ -1674,8 +1779,28 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 	{
 		staff170 staff;
 		memset(&staff, 0, sizeof(staff));
-		UINT nCount = offsetof(staff170, nAlignment) - offsetof(staff170, btEndingBar);
-		if ( nCount != (UINT)in.Read(&staff, nCount) )
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+			ReadBytes(in, staff.btMuted) &&
+			ReadBytes(in, staff.btReserved1) &&
+			ReadBytes(in, staff.btChannel) &&
+			ReadBytes(in, staff.btReserved2) &&
+			ReadBytes(in, staff.btPlaybackDevice) &&
+			ReadBytes(in, staff.btReserved3) &&
+			ReadBytes(in, staff.btSelectPatchBank) &&
+			ReadBytes(in, staff.btReserved4) &&
+			ReadBytes(in, staff.btPatchName) &&
+			ReadBytes(in, staff.btReserved5) &&
+			ReadLEShort(in, staff.nStyle) &&
+			ReadLEShort(in, staff.nVerticalSizeUpper) &&
+			ReadLEShort(in, staff.nVerticalSizeLower) &&
+			ReadLEShort(in, staff.nLayerWithNextStaff) &&
+			ReadLEShort(in, staff.nTransposition) &&
+			ReadLEShort(in, staff.nPartVolume) &&
+			ReadLEShort(in, staff.nStereoPan) &&
+			ReadBytes(in, staff.btColor) &&
+			ReadLEShort(in, staff.btReserved6) &&
+			ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		mStaffInfo.btEndingBar = staff.btEndingBar;
@@ -1705,8 +1830,9 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 		if ( mStaffInfo.nNumLyric )
 		{
-			UINT nCount1 = offsetof(staff175, nLyricBlockSizeInByte) - offsetof(staff175, nAlignment);
-			if ( nCount1 != (UINT)in.Read(&mStaffInfo.nAlignment, nCount1) )
+			bResult = ReadLEShort(in, mStaffInfo.nAlignment) &&
+					  ReadLEShort(in, mStaffInfo.nStaffOffset);
+			if ( !bResult )
 				return false;
 		}
 	}
@@ -1714,8 +1840,29 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 	{
 		staff175 staff;
 		memset(&staff, 0, sizeof(staff));
-		UINT nCount = offsetof(staff175, nAlignment) - offsetof(staff175, btEndingBar);
-		if ( nCount != (UINT)in.Read(&staff, nCount) )
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+			ReadBytes(in, staff.btMuted) &&
+			ReadBytes(in, staff.btReserved1) &&
+			ReadBytes(in, staff.btChannel) &&
+			ReadBytes(in, staff.btReserved2) &&
+			ReadBytes(in, staff.btPlaybackDevice) &&
+			ReadBytes(in, staff.btReserved3) &&
+			ReadBytes(in, staff.btSelectPatchBank) &&
+			ReadBytes(in, staff.btReserved4) &&
+			ReadBytes(in, staff.btPatchName) &&
+			ReadBytes(in, staff.btReserved5) &&
+			ReadLEShort(in, staff.nStyle) &&
+			ReadLEShort(in, staff.nVerticalSizeUpper) &&
+			ReadLEShort(in, staff.nVerticalSizeLower) &&
+			ReadBytes(in, staff.btLines) &&
+			ReadLEShort(in, staff.nLayerWithNextStaff) &&
+			ReadLEShort(in, staff.nTransposition) &&
+			ReadLEShort(in, staff.nPartVolume) &&
+			ReadLEShort(in, staff.nStereoPan) &&
+			ReadBytes(in, staff.btColor) &&
+			ReadLEShort(in, staff.nAlignSyllable) &&
+			ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		mStaffInfo.btEndingBar = staff.btEndingBar;
@@ -1747,23 +1894,48 @@ bool CStaff::Load(wxFile& in, FILE* out, FILELOAD fl)
 
 		if ( mStaffInfo.nNumLyric )
 		{
-			UINT nCount1 = offsetof(staff175, nLyricBlockSizeInByte) - offsetof(staff175, nAlignment);
-			if ( nCount1 != (UINT)in.Read(&mStaffInfo.nAlignment, nCount1) )
+			bResult = ReadLEShort(in, mStaffInfo.nAlignment) &&
+					  ReadLEShort(in, mStaffInfo.nStaffOffset);
+			if ( !bResult )
 				return false;
 		}
 	}
 	else
 	{
-		UINT nCount = offsetof(staff200, nAlignment) - offsetof(staff200, btEndingBar);
-		if ( nCount != (UINT)in.Read(&mStaffInfo, nCount) )
+		staff200& staff = mStaffInfo;
+		bResult = ReadBytes(in, staff.btEndingBar) &&
+			ReadBytes(in, staff.btMuted) &&
+			ReadBytes(in, staff.btReserved1) &&
+			ReadBytes(in, staff.btChannel) &&
+			ReadBytes(in, staff.btReserved2) &&
+			ReadBytes(in, staff.btPlaybackDevice) &&
+			ReadBytes(in, staff.btReserved3) &&
+			ReadBytes(in, staff.btSelectPatchBank) &&
+			ReadBytes(in, staff.btReserved4) &&
+			ReadBytes(in, staff.btPatchName) &&
+			ReadBytes(in, staff.btReserved5) &&
+			ReadBytes(in, staff.btDefaultDynamicVelocity) &&
+			ReadLEShort(in, staff.nStyle) &&
+			ReadLEShort(in, staff.nVerticalSizeUpper) &&
+			ReadLEShort(in, staff.nVerticalSizeLower) &&
+			ReadBytes(in, staff.btLines) &&
+			ReadLEShort(in, staff.nLayerWithNextStaff) &&
+			ReadLEShort(in, staff.nTransposition) &&
+			ReadLEShort(in, staff.nPartVolume) &&
+			ReadLEShort(in, staff.nStereoPan) &&
+			ReadBytes(in, staff.btColor) &&
+			ReadLEShort(in, staff.nAlignSyllable) &&
+			ReadLEShort(in, staff.nNumLyric);
+		if ( !bResult )
 			return false;
 
 		nPos = in.Tell();
 
 		if ( mStaffInfo.nNumLyric )
 		{
-			UINT nCount1 = offsetof(staff200, nLyricBlockSizeInByte) - offsetof(staff200, nAlignment);
-			if ( nCount1 != (UINT)in.Read(&mStaffInfo.nAlignment, nCount1) )
+			bResult = ReadLEShort(in, mStaffInfo.nAlignment) &&
+					  ReadLEShort(in, mStaffInfo.nStaffOffset);
+			if ( !bResult )
 				return false;
 		}
 	}
@@ -1801,7 +1973,7 @@ bool CStaff::LoadLyric(wxFile& in, FILE* out)
 	m_strLyrics.SetCount(mStaffInfo.nNumLyric);
 	for ( int i=0 ; i<mStaffInfo.nNumLyric; i++ )
 	{
-		in.Read(&mStaffInfo.nLyricBlockSizeInByte, sizeof(short));
+		ReadLEShort(in, mStaffInfo.nLyricBlockSizeInByte);
 		mStaffInfo.nLyricSizeInByte = 0;
 
 		wxString& strThisLyric = m_strLyric[i];
@@ -1809,10 +1981,10 @@ bool CStaff::LoadLyric(wxFile& in, FILE* out)
 
 		if ( mStaffInfo.nLyricBlockSizeInByte )
 		{
-			in.Read(&mStaffInfo.nLyricSizeInByte, sizeof(short));
+			ReadLEShort(in, mStaffInfo.nLyricSizeInByte);
 
 			nPos = in.Tell();
-			in.Read(&mStaffInfo.nReserved8, sizeof(short));
+			ReadLEShort(in, mStaffInfo.nReserved8);
 
 			while ( true )
 			{
@@ -1848,13 +2020,15 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 	bool bResult = false;
 	if ( mStaffInfo.nNumLyric )
 	{
-		bResult = sizeof(StaffHeader) == in.Read(&StaffHeader, sizeof(StaffHeader));
+		bResult = ReadLEShort(in, StaffHeader.nUnknown1) &&
+				  ReadLEShort(in, StaffHeader.nUnknown2) &&
+				  ReadLEShort(in, StaffHeader.nNoObj);
 	}
 	else
 	{
 		StaffHeader.nUnknown1 = 0;
-		UINT nCount = sizeof(StaffHeader.nUnknown2) + sizeof(StaffHeader.nNoObj);
-		bResult = nCount == (UINT)in.Read(&StaffHeader.nUnknown2, nCount);
+		bResult = ReadLEShort(in, StaffHeader.nUnknown2) &&
+				  ReadLEShort(in, StaffHeader.nNoObj);
 	}
 
 	if ( bResult == false )

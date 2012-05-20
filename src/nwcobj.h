@@ -778,11 +778,10 @@ public:
 	{
 		strName = LoadStringNULTerminated(in);
 
-		UINT nCount = 4;
-		if ( nCount != (size_t)in.Read(&btStyle, nCount) )
-			return FALSE;
-
-		return TRUE;
+		return ReadBytes(in, btStyle) &&
+			   ReadBytes(in, btSize) &&
+			   ReadBytes(in, btReserved) &&
+			   ReadBytes(in, btCharset);
 	}
 
 	void SetDefault()
@@ -935,6 +934,7 @@ public:
 		BYTE	btColor;			// index of color
 		short	btReserved6;
 		short	nNumLyric;
+
 		short	nAlignment;			// index of [Bottom, Top]
 		short	nStaffOffset;
 
@@ -970,6 +970,7 @@ public:
 		BYTE	btColor;			// index of color
 		short	nAlignSyllable;
 		short	nNumLyric;
+
 		short	nAlignment;			// index of [Bottom, Top]
 		short	nStaffOffset;
 
@@ -1006,6 +1007,7 @@ public:
 		BYTE	btColor;			// index of color
 		short	nAlignSyllable;
 		short	nNumLyric;
+
 		short	nAlignment;			// index of [Bottom, Top]
 		short	nStaffOffset;
 
