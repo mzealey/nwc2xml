@@ -1538,6 +1538,9 @@ intcls gcd(intcls x, intcls y)
 template <class intcls> inline
 intcls lcd(intcls x, intcls y)
 {
+	if ( x == y )
+		return x;
+
 	return x * y / gcd(x, y);
 }
 
@@ -1555,6 +1558,44 @@ long CStaff::GetDivisions() const
 			break;
 		case	Obj_Rest :
 			nDivisions = lcd(nDivisions, ((CRestObj*)pObj)->GetDivision());
+			break;
+		case	Obj_NoteCM :
+			{
+				CNoteCMObj* chord = (CNoteCMObj*)pObj;
+				size_t nCount2 = chord->mObjArray.GetCount();
+				for (size_t j=0; j<nCount2; j++)
+				{
+					CObj* pObj2 = chord->mObjArray[j];
+					switch( pObj2->mObjType )
+					{
+					case	Obj_Note :
+						nDivisions = lcd(nDivisions, ((CNoteObj*)pObj2)->GetDivision());
+						break;
+					case	Obj_Rest :
+						nDivisions = lcd(nDivisions, ((CRestObj*)pObj2)->GetDivision());
+						break;
+					}
+				}
+			}
+			break;
+		case	Obj_RestCM :
+			{
+				CRestCMObj* chord = (CRestCMObj*)pObj;
+				size_t nCount2 = chord->mObjArray.GetCount();
+				for (size_t j=0; j<nCount2; j++)
+				{
+					CObj* pObj2 = chord->mObjArray[j];
+					switch( pObj2->mObjType )
+					{
+					case	Obj_Note :
+						nDivisions = lcd(nDivisions, ((CNoteObj*)pObj2)->GetDivision());
+						break;
+					case	Obj_Rest :
+						nDivisions = lcd(nDivisions, ((CRestObj*)pObj2)->GetDivision());
+						break;
+					}
+				}
+			}
 			break;
 		}
 	}

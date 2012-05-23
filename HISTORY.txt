@@ -1,3 +1,7 @@
+2012/5/22
+ o Read NWC2.1 file format. File version is 2.01 internally.
+ o Handle note/rest chord member for division calculation. Request done by Nils Liberg.
+
 2012/5/11
  o Update code to produce grace. Request done by Nils Liberg.
 

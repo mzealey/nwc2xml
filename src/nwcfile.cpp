@@ -272,11 +272,11 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		wxFprintf(out, _T("\nallowlayering:%d\n"), bAllowLayering);
 	}
 	nPos = in.Tell();
-	//if ( btUnknown5[0] == 0x07 || btUnknown5[0] == 0x08 )
-	//{
-	//	strNotationTypeface = LoadStringNULTerminated(in);
-	//	wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
-	//}
+	if ( nVersion >= NWC_Version201 )
+	{
+		strNotationTypeface = LoadStringNULTerminated(in);
+		wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
+	}
 	ReadLEShort(in, nStaffHeight);
 	wxFprintf(out, _T("staffheight=%d\n"), nStaffHeight);
 

@@ -26,6 +26,7 @@ typedef enum
 	NWC_Version170	= 0x0146,
 	NWC_Version175	= 0x014B,
 	NWC_Version200	= 0x0200,
+	NWC_Version201	= 0x0201,
 } NWC_Version;
 
 inline bool	IsValidVersion(short nVersion)
@@ -34,7 +35,8 @@ inline bool	IsValidVersion(short nVersion)
 		   (nVersion==NWC_Version130) ||
 		   (nVersion==NWC_Version150) || (nVersion==NWC_Version155) ||
 		   (nVersion==NWC_Version170) || (nVersion==NWC_Version175) ||
-		   (nVersion==NWC_Version200);
+		   (nVersion==NWC_Version200) || (nVersion==NWC_Version201)
+		   ;
 }
 
 typedef enum
