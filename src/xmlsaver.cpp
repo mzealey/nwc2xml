@@ -1397,12 +1397,10 @@ bool	XMLSaver::Save(LPCTSTR szNWCFile, LPCTSTR szFile, CNWCFile* pNWCObj, MXML_V
 
 			wxFileName fn(szNWCFile);
 			wxDateTime dtUTC = fn.GetModificationTime();
-			wxDateTime dtLocal = dtUTC.ToTimezone(wxDateTime::TimeZone(wxDateTime::Local));
-			//SystemTimeToTzSpecificLocalTime(NULL, &st, &lt);
 
 			writer.WriteKeyStart(_T("encoding"));
 				writer.WriteString(_T("software"), _T("Noteworthy Composer"));
-				str.Printf(_T("%04d-%02d-%02d"), dtLocal.GetYear(), dtLocal.GetMonth(), dtLocal.GetDay());
+				str.Printf(_T("%04d-%02d-%02d"), dtUTC.GetYear(), dtUTC.GetMonth()+1, dtUTC.GetDay());
 				writer.WriteString(_T("encoding-date"), str);
 			writer.WriteKeyEnd();
 

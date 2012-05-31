@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 		{ wxCMD_LINE_SWITCH, _T("l"), _T("log"),	_T("generate log file") },
 
 		{ wxCMD_LINE_OPTION, NULL, _T("charset"),	_T("conversion charset for lyric; default is system setting"),
-		wxCMD_LINE_VAL_NUMBER },
+		wxCMD_LINE_VAL_STRING },
 
 		{ wxCMD_LINE_PARAM,  NULL, NULL, _T("input file"),
 		wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },

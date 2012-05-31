@@ -192,6 +192,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath="..\..\src\nwc2xml-version.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\nwc2xml.cpp"
 				>
 				<FileConfiguration
