@@ -64,6 +64,74 @@ DWORD ConvertNWC2MusicXML(const wxString& strNWC, bool bGenerateLog)
 	return dwResult;
 }
 
+#ifndef	_WIN32
+wxCSConv* CreateWindowsCompatibleConv()
+{
+	wxFontEncoding encoding = wxLocale::GetSystemEncoding();
+	wxFontEncoding oldEncoding = encoding;
+	switch ( encoding )
+	{
+		// ISO Encoding
+	case	wxFONTENCODING_ISO8859_1 :		encoding = wxFONTENCODING_CP1252;	break;
+	case	wxFONTENCODING_ISO8859_2 :		encoding = wxFONTENCODING_CP1250;	break;
+	case	wxFONTENCODING_ISO8859_5 :		encoding = wxFONTENCODING_CP1251;	break;
+	case	wxFONTENCODING_ISO8859_6 :		encoding = wxFONTENCODING_CP1256;	break;
+	case	wxFONTENCODING_ISO8859_7 :		encoding = wxFONTENCODING_CP1253;	break;
+	case	wxFONTENCODING_ISO8859_8 :		encoding = wxFONTENCODING_CP1255;	break;
+	case	wxFONTENCODING_ISO8859_9 :		encoding = wxFONTENCODING_CP1254;	break;
+	case	wxFONTENCODING_ISO8859_11 :		encoding = wxFONTENCODING_CP874;	break;
+	case	wxFONTENCODING_ISO8859_13 :		encoding = wxFONTENCODING_CP1257;	break;
+
+		// Mac Encoding
+	case	wxFONTENCODING_MACROMAN :		encoding = wxFONTENCODING_CP1252;	break;
+	case	wxFONTENCODING_MACJAPANESE :	encoding = wxFONTENCODING_CP932;	break;
+	case	wxFONTENCODING_MACCHINESETRAD :	encoding = wxFONTENCODING_CP950;	break;
+	case	wxFONTENCODING_MACKOREAN :		encoding = wxFONTENCODING_CP949;	break;
+	case	wxFONTENCODING_MACARABIC :		encoding = wxFONTENCODING_CP1256;	break;
+	case	wxFONTENCODING_MACHEBREW :		encoding = wxFONTENCODING_CP1255;	break;
+	case	wxFONTENCODING_MACGREEK :		encoding = wxFONTENCODING_CP1253;	break;
+	case	wxFONTENCODING_MACCYRILLIC :	encoding = wxFONTENCODING_CP1251;	break;
+	//case	wxFONTENCODING_MACDEVANAGARI :	encoding = ;	break;
+	//case	wxFONTENCODING_MACGURMUKHI :	encoding = ;	break;
+	//case	wxFONTENCODING_MACGUJARATI :	encoding = ;	break;
+	//case	wxFONTENCODING_MACORIYA :		encoding = ;	break;
+	//case	wxFONTENCODING_MACBENGALI :		encoding = ;	break;
+	//case	wxFONTENCODING_MACTAMIL :		encoding = ;	break;
+	//case	wxFONTENCODING_MACTELUGU :		encoding = ;	break;
+	//case	wxFONTENCODING_MACKANNADA :		encoding = ;	break;
+	//case	wxFONTENCODING_MACMALAJALAM :	encoding = ;	break;
+	//case	wxFONTENCODING_MACSINHALESE :	encoding = ;	break;
+	//case	wxFONTENCODING_MACBURMESE :		encoding = ;	break;
+	//case	wxFONTENCODING_MACKHMER :		encoding = ;	break;
+	case	wxFONTENCODING_MACTHAI :		encoding = wxFONTENCODING_ISO8859_11;	break;
+	//case	wxFONTENCODING_MACLAOTIAN :		encoding = ;	break;
+	//case	wxFONTENCODING_MACGEORGIAN :	encoding = ;	break;
+	//case	wxFONTENCODING_MACARMENIAN :	encoding = ;	break;
+	case	wxFONTENCODING_MACCHINESESIMP :	encoding = wxFONTENCODING_CP936;	break;
+	//case	wxFONTENCODING_MACTIBETAN :		encoding = ;	break;
+	//case	wxFONTENCODING_MACMONGOLIAN :	encoding = ;	break;
+	//case	wxFONTENCODING_MACETHIOPIC :	encoding = ;	break;
+	//case	wxFONTENCODING_MACCENTRALEUR :	encoding = ;	break;
+	//case	wxFONTENCODING_MACVIATNAMESE :	encoding = ;	break;
+	case	wxFONTENCODING_MACARABICEXT :	encoding = wxFONTENCODING_CP1256;	break;
+	//case	wxFONTENCODING_MACDINGBATS :	encoding = ;	break;
+	case	wxFONTENCODING_MACTURKISH :		encoding = wxFONTENCODING_CP1254;	break;
+	//case	wxFONTENCODING_MACCROATIAN :	encoding = ;	break;
+	//case	wxFONTENCODING_MACICELANDIC :	encoding = ;	break;
+	//case	wxFONTENCODING_MACROMANIAN :	encoding = ;	break;
+	//case	wxFONTENCODING_MACCELTIC :		encoding = ;	break;
+	//case	wxFONTENCODING_MACGAELIC :		encoding = ;	break;
+	}
+
+	wxCSConv* pCSConv = NULL;
+	if ( oldEncoding != encoding )
+	{
+		pCSConv = new wxCSConv(encoding);
+	}
+
+	return pCSConv;
+}
+#endif
 
 static wxChar* s_ProgramLogo =
 _T("nwc2xml v1.5 Copyright (C) 2005-2012 james lee (juria90@yahoo.com)\n")
@@ -155,6 +223,22 @@ int main(int argc, char *argv[])
 			g_pMBConv = pCSConv;
 		}
 	}
+
+#ifndef	_WIN32
+	if ( g_pMBConv == &wxConvLocal )
+	{
+		pCSConv = CreateWindowsCompatibleConv();
+		if ( pCSConv && pCSConv->IsOk() )
+		{
+			g_pMBConv = pCSConv;
+		}
+		else
+		{
+			delete pCSConv;
+			pCSConv = NULL;
+		}
+	}
+#endif
 
 	bool bGenerateLog = parser.Found(_T("log"));
 
