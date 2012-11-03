@@ -272,10 +272,10 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		wxFprintf(out, _T("\nallowlayering:%d\n"), bAllowLayering);
 	}
 	nPos = in.Tell();
-	if ( nVersion >= NWC_Version201 )
+	if ( nVersion >= NWC_Version200 )
 	{
 		strNotationTypeface = LoadStringNULTerminated(in);
-		wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface);
+		wxFprintf(out, _T("notationtypeface:%s\n"), strNotationTypeface.c_str());
 	}
 	ReadLEShort(in, nStaffHeight);
 	wxFprintf(out, _T("staffheight=%d\n"), nStaffHeight);
