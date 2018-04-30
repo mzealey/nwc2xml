@@ -21,6 +21,7 @@
 
 #include "wx/wx.h"
 #include "wx/file.h"
+#include "wx/thread.h"
 #include "wx/ffile.h"
 #include "TVector.h"
 

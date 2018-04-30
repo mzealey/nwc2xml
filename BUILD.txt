@@ -1,3 +1,8 @@
+For linux, simply install the appropriate wxWidgets 3 libraries for your
+system, go to src and type 'make'
+
+Original build instructions:
+
 Build instruction for nwc2xml.
 
 As of Now(May 2012), building nwc2xml is support only in Windows and Mac OS X platform.

@@ -1451,7 +1451,7 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 		if ( bResult )
 		{
 			if ( g_bDumpOffset )
-				wxFprintf(out, _T("%08x:"), nPos);
+				wxFprintf(out, _T("%08lx:"), nPos);
 			pObj->Dump(out);
 
 			if ( Obj_NoteCM == pObj->mObjType )
@@ -1468,14 +1468,14 @@ CObj*	CreateNLoadObject(wxFile& in, FILE* out, CStaff* pStaff)
 			delete pObj;
 			pObj = NULL;
 
-			fprintf(stderr, "failed to load object type=0x%04x, at file offset=%08x\n", (unsigned short)objType, nPos);
+			fprintf(stderr, "failed to load object type=0x%04x, at file offset=%08lx\n", (unsigned short)objType, nPos);
 			if ( wxIsDebuggerRunning() ) MyTrap();
 			return NULL;
 		}
 	}
 	else
 	{
-		fprintf(stderr, "unknown object type=0x%04x, at file offset=%08x\n", (unsigned short)objType, nPos);
+		fprintf(stderr, "unknown object type=0x%04x, at file offset=%08lx\n", (unsigned short)objType, nPos);
 		if ( wxIsDebuggerRunning() ) MyTrap();
 		return NULL;
 	}
@@ -2004,7 +2004,7 @@ bool CStaff::LoadLyric(wxFile& in, FILE* out)
 	wxFprintf(out, _T("#lyric = %d\n"), mStaffInfo.nNumLyric);
 	if ( !(0 <= mStaffInfo.nNumLyric && mStaffInfo.nNumLyric <= 8 ) )
 	{
-		fprintf(stderr, "invalid nNumLyric=%d at file offset=%08x\n", mStaffInfo.nNumLyric, nPos);
+		fprintf(stderr, "invalid nNumLyric=%d at file offset=%08lx\n", mStaffInfo.nNumLyric, nPos);
 		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}
@@ -2074,7 +2074,7 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 
 	if ( bResult == false )
 	{
-		fprintf(stderr, "error in file, at file offset=%08x\n", nPos);
+		fprintf(stderr, "error in file, at file offset=%08lx\n", nPos);
 		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}
@@ -2085,7 +2085,7 @@ bool CStaff::LoadNotes(wxFile& in, FILE* out)
 
 	if ( nObjCount < 0 )
 	{
-		fprintf(stderr, "invalid objcount=%d, at file offset=%08x\n", nObjCount, nPos);
+		fprintf(stderr, "invalid objcount=%d, at file offset=%08lx\n", nObjCount, nPos);
 		if ( wxIsDebuggerRunning() ) MyTrap();
 		return false;
 	}

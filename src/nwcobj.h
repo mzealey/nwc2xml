@@ -142,7 +142,7 @@ typedef enum
 	PS_DOWN,
 } PEDALSTYLE;
 
-typedef enum
+enum
 {
 	FONTID_STAFF_ITALIC,
 	FONTID_STAFF_BOLD,

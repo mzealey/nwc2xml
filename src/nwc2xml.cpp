@@ -137,7 +137,7 @@ wxCSConv* CreateWindowsCompatibleConv()
 static wxChar* s_ProgramLogo = _T(PROGRAM_ABOUT);
 
 #if defined(__WXMSW__) && defined(UNICODE)
-int wmain(int argc, wchar_t *argv[])
+int wmain(int argc, char *argv[])
 #else
 int main(int argc, char *argv[])
 #endif
@@ -170,14 +170,14 @@ int main(int argc, char *argv[])
 
 	static const wxCmdLineEntryDesc cmdLineDesc[] =
 	{
-		{ wxCMD_LINE_SWITCH, _T("h"), _T("help"),	_T("show this help message"),
+		{ wxCMD_LINE_SWITCH, "h", "help",	"show this help message",
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_SWITCH, _T("l"), _T("log"),	_T("generate log file") },
+		{ wxCMD_LINE_SWITCH, "l", "log",	"generate log file" },
 
-		{ wxCMD_LINE_OPTION, NULL, _T("charset"),	_T("conversion charset for lyric; default is system setting"),
+		{ wxCMD_LINE_OPTION, NULL, "charset",	"conversion charset for lyric; default is system setting",
 		wxCMD_LINE_VAL_STRING },
 
-		{ wxCMD_LINE_PARAM,  NULL, NULL, _T("input file"),
+		{ wxCMD_LINE_PARAM,  NULL, NULL, "input file",
 		wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
 
 		{ wxCMD_LINE_NONE }
