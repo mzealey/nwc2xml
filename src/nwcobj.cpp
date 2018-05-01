@@ -445,8 +445,47 @@ bool CTempoObj::Dump(FILE* fp)
 	wxFprintf(fp, _T(",Placement=0x%0x"), mPlacement);
 	wxFprintf(fp, _T(",%s=%d"), GetBaseAsString().c_str(), mTempoValue);
 	wxFprintf(fp, _T(",String(%s)"), mText.c_str());
+	wxFprintf(fp, _T(",Val=%ld"), GetTempoByQuarter());
 	wxFprintf(fp, _T("\n"));
 	return true;
+}
+
+// Get the note to display in the tempo section
+wxString CTempoObj::GetTempoNote() const
+{
+	wxString str;
+	switch( mBase / 2 )
+	{
+	default:
+	case	0 :	str = _T("eighth"); break;
+	case	1 :	str = _T("quarter"); break;
+	case	2 :	str = _T("half"); break;
+	}
+
+    return str;
+}
+
+// Should we have a dot following the tempo note?
+bool CTempoObj::GetTempoNoteDotted() const
+{
+	return !!(mBase % 2);
+}
+
+long	CTempoObj::GetTempoNoteSpeed() const
+{
+	long nTempo;
+	switch( mBase )
+	{
+	case	0 : nTempo = mTempoValue * 2; break;
+	case	1 : nTempo = MulDiv(mTempoValue, 4, 3); break;
+	default:
+	case	2 : nTempo = mTempoValue; break;
+	case	3 : nTempo = MulDiv(mTempoValue, 2, 3); break;
+	case	4 : nTempo = mTempoValue / 2; break;
+	case	5 : nTempo = mTempoValue / 3; break;
+	}
+
+	return nTempo;
 }
 
 wxString CTempoObj::GetBaseAsString()
@@ -471,6 +510,9 @@ wxString CTempoObj::GetBaseAsString()
 
 long	CTempoObj::GetTempoByQuarter() const
 {
+	return mTempoValue;
+
+    /*
 	long nTempo;
 	switch( mBase )
 	{
@@ -484,6 +526,7 @@ long	CTempoObj::GetTempoByQuarter() const
 	}
 
 	return nTempo;
+    */
 }
 
 bool CDynamicObj::Load(wxFile& file)

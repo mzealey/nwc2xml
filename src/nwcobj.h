@@ -451,6 +451,10 @@ public:
 	virtual bool Load(wxFile& file);
 	virtual bool Dump(FILE* fp);
 
+	wxString GetTempoNote() const;
+	bool GetTempoNoteDotted() const;
+	long GetTempoNoteSpeed() const;
+
 	wxString GetBaseAsString();
 
 	long	GetTempoByQuarter() const;

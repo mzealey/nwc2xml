@@ -333,9 +333,25 @@ inline	void	XMLSaver::SaveTimeSig(CXMLWriter& writer, const CTimeSigObj& obj)
 
 inline	void	XMLSaver::SaveTempo(CXMLWriter& writer, const CTempoObj& obj)
 {
-	writer.WriteKeyStart(_T("sound"));
-	writer.WriteAttrInteger(_T("tempo"), obj.GetTempoByQuarter());
-	writer.WriteKeyEnd();
+    // Show the symbol above the line
+	writer.WriteKeyStart(_T("direction"));
+
+		writer.WriteKeyStart(_T("direction-type"));
+            writer.WriteKeyStart(_T("metronome"));
+            writer.WriteAttrString(_T("parentheses"), _T("no"));
+                writer.WriteString(_T("beat-unit"), obj.GetTempoNote());
+                if( obj.GetTempoNoteDotted() )
+                    writer.WriteKeyStartEnd(_T("beat-unit-dot"));
+
+                writer.WriteInteger(_T("per-minute"), obj.GetTempoNoteSpeed());
+            writer.WriteKeyEnd();
+        writer.WriteKeyEnd();
+
+        // This is the midi play speed, always in quarters
+        writer.WriteKeyStart(_T("sound"));
+        writer.WriteAttrInteger(_T("tempo"), obj.GetTempoByQuarter());
+        writer.WriteKeyEnd();
+    writer.WriteKeyEnd();
 }
 
 inline	void	XMLSaver::SaveDynamic(CXMLWriter& writer, const CDynamicObj& obj)
