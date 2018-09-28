@@ -1168,6 +1168,11 @@ inline	void XMLSaver::Save(CXMLWriter& writer, const CStaff& staff, int nMeasure
 			if ( nStartIndex != -1 )
 				SaveMultiVoice(writer, staff, nDivisions, nStartIndex, (int)i, nMeasureDuration);
 
+            // Bar right before end of file - don't create a new measure after
+            // it otherwise the end-stave will be a separate blank block
+            if( i + 1 == staff.mObjArray.GetCount() )
+                bCreateNewMeasure = FALSE;
+
 			SaveBarLine(writer, *(CBarLineObj*)pObj, nMeasurement, bCreateNewMeasure,
 						&staff.mObjArray[0] + i+1, &staff.mObjArray[0] + staff.mObjArray.GetCount());
 			bCreateNewMeasure = FALSE;
