@@ -1138,6 +1138,13 @@ bool CFlowDirObj::Dump(FILE* fp)
 	return true;
 }
 
+bool CFlowDirObj::MoveBeforeMeasure()
+{
+    if( mStyle == FS_TOCODA )
+        return true;
+    return false;
+}
+
 wxString CFlowDirObj::GetStyleAsString()
 {
 	static wxChar *s_Styles[] = { _T("Coda"), _T("Segno"), _T("Fine"), _T("To Coda"), _T("Da capo"), _T("D.C. al Coda"), _T("D.C. al Fine"), _T("Dal Segno"), _T("D.S. al Coda"), _T("D.S. al Fine") };

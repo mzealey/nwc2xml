@@ -626,6 +626,7 @@ public:
 	virtual bool Dump(FILE* fp);
 
 	wxString GetStyleAsString();
+	bool MoveBeforeMeasure();
 	FLOWSTYLE	GetFlowStyle() const;
 };
 

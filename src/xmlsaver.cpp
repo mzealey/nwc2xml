@@ -177,7 +177,7 @@ inline	void	XMLSaver::SaveBarLine(CXMLWriter& writer, const CBarLineObj& obj, in
 		if ( blStyle == BL_SECTION_CLOSE || blStyle == BL_MASTER_CLOSE )
 			writer.WriteString(_T("bar-style"), _T("light-heavy"));
 		else if ( blStyle == BL_LOCAL_CLOSE )
-			writer.WriteString(_T("bar-style"), _T("light-light"));
+			writer.WriteString(_T("bar-style"), _T("light-heavy"));
 
 		if ( m_strEnding.Length() && (blStyle == BL_LOCAL_CLOSE || blStyle == BL_MASTER_CLOSE) )
 		{
@@ -228,7 +228,7 @@ inline	void	XMLSaver::SaveBarLine(CXMLWriter& writer, const CBarLineObj& obj, in
 		if ( blStyle == BL_SECTION_OPEN || blStyle == BL_MASTER_OPEN )
 			writer.WriteString(_T("bar-style"), _T("heavy-light"));
 		else if ( blStyle == BL_DOUBLE || blStyle == BL_LOCAL_OPEN )
-			writer.WriteString(_T("bar-style"), _T("light-light"));
+			writer.WriteString(_T("bar-style"), _T("heavy-light"));
 
 		if ( bNumber )
 		{
@@ -793,34 +793,24 @@ inline	void	XMLSaver::SavePedal(CXMLWriter& writer, const CPedalObj& obj)
 
 inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 {
-#if	0
 	FLOWSTYLE fs = obj.GetFlowStyle();
-	switch ( fs )
-	{
+	writer.WriteKeyStart(_T("direction"));
+
+	switch ( fs ) {
 	case	FS_CODA :
 	case	FS_SEGNO :
+        writer.WriteKeyStart(_T("direction-type"));
+        if ( fs == FS_CODA )
+            writer.WriteKeyStartEnd(_T("coda"));
+        else if ( fs == FS_SEGNO )
+            writer.WriteKeyStartEnd(_T("segno"));
+
+        writer.WriteKeyEnd();
+        // fall through
+
 	case	FS_FINE :
-	case	FS_TOCODA :
 	case	FS_DACAPO :
 	case	FS_DALSEGNO :
-		break;
-
-	default :
-		return;
-	}
-
-	writer.WriteKeyStart(_T("direction"));
-		if ( fs == FS_CODA )//|| fs == FS_SEGNO )
-		{
-			writer.WriteKeyStart(_T("direction-type"));
-			if ( fs == FS_CODA )
-				writer.WriteKeyStartEnd(_T("coda"));
-			else if ( fs == FS_SEGNO )
-				writer.WriteKeyStartEnd(_T("segno"));
-
-			writer.WriteKeyEnd();
-		}
-
 		writer.WriteKeyStart(_T("sound"));
 		switch ( fs )
 		{
@@ -833,9 +823,6 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 		case	FS_FINE :
 			writer.WriteAttrString(_T("fine"), _T(""));
 			break;
-		case	FS_TOCODA :
-			writer.WriteAttrString(_T("tocoda"), _T(""));
-			break;
 		case	FS_DACAPO :
 			writer.WriteAttrString(_T("dacapo"), _T(""));
 			break;
@@ -844,9 +831,40 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 			break;
 		}
 		writer.WriteKeyEnd();
+        break;
+
+	case	FS_TOCODA :
+	case    FS_DCALCODA:
+	case    FS_DCALFINE:
+	case    FS_DSALCODA:
+	case    FS_DSALFINE:
+        writer.WriteAttrString(_T("placement"), _T("above"));
+        writer.WriteKeyStart(_T("direction-type"));
+            writer.WriteKeyStart(_T("words"));
+                writer.WriteAttrInteger(_T("relative-y"), XMLPosFromNWCPos(obj.mPos));
+                if( fs == FS_TOCODA )
+                    writer.WriteString(_T("To Coda"));
+                else if( fs == FS_DCALCODA )
+                    writer.WriteString(_T("D.C. al Coda"));
+                else if( fs == FS_DSALCODA )
+                    writer.WriteString(_T("D.S. al Coda"));
+                else if( fs == FS_DCALFINE )
+                    writer.WriteString(_T("D.C. al Fine"));
+                else if( fs == FS_DSALFINE )
+                    writer.WriteString(_T("D.S. al Fine"));
+            writer.WriteKeyEnd();
+
+        writer.WriteKeyEnd();
+
+        if( fs == FS_TOCODA ) {
+            writer.WriteKeyStart(_T("sound"));
+			writer.WriteAttrString(_T("tocoda"), _T(""));
+            writer.WriteKeyEnd();
+        }
+        break;
+	}
 
 	writer.WriteKeyEnd();
-#endif
 }
 
 inline	void	XMLSaver::SaveMPC(CXMLWriter& WXUNUSED(writer), const CMPCObj& WXUNUSED(obj))
@@ -1127,6 +1145,7 @@ inline	void XMLSaver::Save(CXMLWriter& writer, const CStaff& staff, int nMeasure
 	m_nSlurNo = 1;
 	int nMeasureDuration = 0;
 	bool bSaveNote = FALSE;
+    int skip_items = 0;
 	for ( size_t i=0 ; i<staff.mObjArray.GetCount() ; i++ )
 	{
 		CObj* pObj = staff.mObjArray[i];
@@ -1135,6 +1154,17 @@ inline	void XMLSaver::Save(CXMLWriter& writer, const CStaff& staff, int nMeasure
 		case	Obj_Clef :		SaveClef(writer, *(CClefObj*)pObj); break;
 		case	Obj_KeySig :	SaveKeySig(writer, *(CKeySigObj*)pObj); break;
 		case	Obj_BarLine :
+            if( i + 1 < staff.mObjArray.GetCount() ) {
+                CObj *pNextObj = staff.mObjArray[i+1];
+                if( pNextObj->mObjType == Obj_FlowDir ) {
+                    CFlowDirObj *pFlowObj = (CFlowDirObj*)pNextObj;
+                    if( pFlowObj->MoveBeforeMeasure() ) {
+                        SaveFlowDir(writer, *pFlowObj);
+                        skip_items = 1;
+                    }
+                }
+            }
+
 			if ( nStartIndex != -1 )
 				SaveMultiVoice(writer, staff, nDivisions, nStartIndex, (int)i, nMeasureDuration);
 
@@ -1225,6 +1255,9 @@ inline	void XMLSaver::Save(CXMLWriter& writer, const CStaff& staff, int nMeasure
 				nMeasureDuration += GetFirstVoiceDuration( ((CRestCMObj*)pObj)->mObjArray, nDivisions );
 			break;
 		}
+
+        i += skip_items;
+        skip_items = 0;
 	}
 
 	if ( nStartIndex != -1 )
