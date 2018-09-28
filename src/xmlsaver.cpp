@@ -809,7 +809,6 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
         writer.WriteKeyEnd();
         // fall through
 
-	case	FS_FINE :
 	case	FS_DACAPO :
 	case	FS_DALSEGNO :
 		writer.WriteKeyStart(_T("sound"));
@@ -821,9 +820,6 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 		case	FS_SEGNO :
 			writer.WriteAttrString(_T("segno"), _T(""));
 			break;
-		case	FS_FINE :
-			writer.WriteAttrString(_T("fine"), _T(""));
-			break;
 		case	FS_DACAPO :
 			writer.WriteAttrString(_T("dacapo"), _T(""));
 			break;
@@ -834,6 +830,7 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 		writer.WriteKeyEnd();
         break;
 
+	case	FS_FINE :
 	case	FS_TOCODA :
 	case    FS_DCALCODA:
 	case    FS_DCALFINE:
@@ -845,6 +842,8 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
                 writer.WriteAttrInteger(_T("relative-y"), XMLPosFromNWCPos(obj.mPos));
                 if( fs == FS_TOCODA )
                     writer.WriteString(_T("To Coda"));
+                else if( fs == FS_FINE )
+                    writer.WriteString(_T("Fine"));
                 else if( fs == FS_DCALCODA )
                     writer.WriteString(_T("D.C. al Coda"));
                 else if( fs == FS_DSALCODA )
@@ -857,9 +856,12 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 
         writer.WriteKeyEnd();
 
-        if( fs == FS_TOCODA ) {
+        if( fs == FS_TOCODA || fs == FS_FINE ) {
             writer.WriteKeyStart(_T("sound"));
-			writer.WriteAttrString(_T("tocoda"), _T(""));
+            if( fs == FS_TOCODA )
+                writer.WriteAttrString(_T("tocoda"), _T(""));
+            else if( fs == FS_FINE )
+                writer.WriteAttrString(_T("fine"), _T(""));
             writer.WriteKeyEnd();
         }
         break;
