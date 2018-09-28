@@ -805,28 +805,13 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
             writer.WriteKeyStartEnd(_T("coda"));
         else if ( fs == FS_SEGNO )
             writer.WriteKeyStartEnd(_T("segno"));
-
         writer.WriteKeyEnd();
-        // fall through
 
-	case	FS_DACAPO :
-	case	FS_DALSEGNO :
 		writer.WriteKeyStart(_T("sound"));
-		switch ( fs )
-		{
-		case	FS_CODA :
+        if( fs == FS_CODA )
 			writer.WriteAttrString(_T("coda"), _T(""));
-			break;
-		case	FS_SEGNO :
+        else if( fs = FS_SEGNO )
 			writer.WriteAttrString(_T("segno"), _T(""));
-			break;
-		case	FS_DACAPO :
-			writer.WriteAttrString(_T("dacapo"), _T(""));
-			break;
-		case	FS_DALSEGNO :
-			writer.WriteAttrString(_T("dalsegno"), _T(""));
-			break;
-		}
 		writer.WriteKeyEnd();
         break;
 
@@ -836,6 +821,8 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 	case    FS_DCALFINE:
 	case    FS_DSALCODA:
 	case    FS_DSALFINE:
+	case	FS_DACAPO :
+	case	FS_DALSEGNO :
         writer.WriteAttrString(_T("placement"), _T("above"));
         writer.WriteKeyStart(_T("direction-type"));
             writer.WriteKeyStart(_T("words"));
@@ -844,6 +831,10 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
                     writer.WriteString(_T("To Coda"));
                 else if( fs == FS_FINE )
                     writer.WriteString(_T("Fine"));
+                else if( fs == FS_DACAPO )
+                    writer.WriteString(_T("D.C."));
+                else if( fs == FS_DALSEGNO )
+                    writer.WriteString(_T("D.S."));
                 else if( fs == FS_DCALCODA )
                     writer.WriteString(_T("D.C. al Coda"));
                 else if( fs == FS_DSALCODA )
@@ -856,12 +847,16 @@ inline	void	XMLSaver::SaveFlowDir(CXMLWriter& writer, const CFlowDirObj& obj)
 
         writer.WriteKeyEnd();
 
-        if( fs == FS_TOCODA || fs == FS_FINE ) {
+        if( fs == FS_TOCODA || fs == FS_FINE || fs == FS_DACAPO || fs == FS_DALSEGNO ) {
             writer.WriteKeyStart(_T("sound"));
             if( fs == FS_TOCODA )
                 writer.WriteAttrString(_T("tocoda"), _T(""));
             else if( fs == FS_FINE )
                 writer.WriteAttrString(_T("fine"), _T(""));
+            else if( fs == FS_DACAPO )
+                writer.WriteAttrString(_T("dacapo"), _T("yes"));
+            else if( fs == FS_DALSEGNO )
+                writer.WriteAttrString(_T("dalsegno"), _T(""));
             writer.WriteKeyEnd();
         }
         break;
