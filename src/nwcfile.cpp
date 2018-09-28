@@ -263,6 +263,12 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 		return ERROR_INVALID_DATA;
 	}
 
+    /*
+	wxFprintf(out, _T("btUnknown2:%02x%02x%02x%02x\n"), (char)btUnknown2[0], (char)btUnknown2[1], (char)btUnknown2[2], (char)btUnknown2[3]);
+	wxFprintf(out, _T("btUnknown3:%02x%02x%02x%02x%02x; btUnknown4:%02x\n"), (char)btUnknown3[0], (char)btUnknown3[1], (char)btUnknown3[2], (char)btUnknown3[3], (char)btUnknown3[4], (char)btUnknown4[0]);
+	wxFprintf(out, _T("btUnknown5:%02x%02x\n"), (char)btUnknown5[0], (char)btUnknown5[1]);
+    */
+
 	if ( nVersion > NWC_Version130 )
 	{
 		ReadBytes(in, nGroupVisibility);
@@ -356,7 +362,10 @@ DWORD CNWCFile::Load(wxFile& in, FILE* out, FILELOAD fl)
 			delete pStaff;
 			return ERROR_INVALID_STAFF;
 		}
-		mStaffs.Add(pStaff);
+
+        // Exclude staffs from display if they are not marked as visible
+        if ( nVersion <= NWC_Version130 || nGroupVisibility[(int)(i / 8)] & ( 1 << (i % 8) ) )
+            mStaffs.Add(pStaff);
 		fflush(out);
 
 		// load until staff which has lyric
