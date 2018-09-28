@@ -402,6 +402,10 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 		if ( bChord )
 			writer.WriteKeyStartEnd(_T("chord"));
 
+		NOTEATTR na = obj.GetNoteAttributes();
+		if ( na & NA_GRACE )
+			writer.WriteKeyStartEnd(_T("grace"));
+
 		wxChar chStep[2] = { 0 };
 		int nOctave;
 		int nAlter;
@@ -415,10 +419,10 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 
 		writer.WriteKeyEnd();
 
-		writer.WriteInteger(_T("duration"), obj.GetDuration(nDivision));
+        if( !(na & NA_GRACE ) )
+            writer.WriteInteger(_T("duration"), obj.GetDuration(nDivision));
 
 		DURATIONTYPE dt = obj.GetDurationType();
-		NOTEATTR na = obj.GetNoteAttributes();
 
 		if ( na & NA_TIE_END )
 		{
@@ -445,9 +449,6 @@ inline	void	XMLSaver::SaveNote(CXMLWriter& writer, const CNoteObj& obj,
 				writer.WriteKeyEnd();
 			}
 		}
-
-		if ( na & NA_GRACE )
-			writer.WriteKeyStartEnd(_T("grace"));
 
 		if ( m_nVoice )
 			writer.WriteInteger(_T("voice"), m_nVoice);
