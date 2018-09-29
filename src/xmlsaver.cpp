@@ -766,7 +766,7 @@ inline	void	XMLSaver::SaveNoteCM(CXMLWriter& writer, const CNoteCMObj& obj,
 			}
 			break;
 		case	Obj_Rest :
-			SaveRest(writer, *(CRestObj*)pObj, nDivision);
+			//SaveRest(writer, *(CRestObj*)pObj, nDivision);
 			break;
 		}
 	}
@@ -908,10 +908,26 @@ inline	void	XMLSaver::SaveText(CXMLWriter& writer, const CTextObj& obj, const wx
 
 inline	void	XMLSaver::SaveRestCM(CXMLWriter& writer, const CRestCMObj& obj, long nDivision)
 {
-	SaveRest(writer, obj, nDivision);
+	//SaveRest(writer, obj, nDivision);
 
 	CLyricArray strLyrics;
 	int nLyricIndex = -1;	// ignore lyric
+
+    // Ensure that all elements are the same length as the rest (sometimes nwc has the notes being longer than the rest parent for some reason)
+    /*
+    int totalLength = obj.GetDuration(nDivision);
+    int curLength = 0;
+	for ( size_t i=0 ; i<obj.mObjArray.GetCount() ; i++ ) {
+		CObj* pObj = obj.mObjArray[i];
+
+        curLength += pObj.GetDuration(nDivision);
+        if( curLength > totalLength ) {
+            wxFprintf(fp, _T("RestCM overflow:\n"));
+            //pObj.SetDuration(curLength - totalLength);
+            curLength = totalLength;
+        }
+    }
+    */
 
 	for ( size_t i=0 ; i<obj.mObjArray.GetCount() ; i++ )
 	{
@@ -921,7 +937,7 @@ inline	void	XMLSaver::SaveRestCM(CXMLWriter& writer, const CRestCMObj& obj, long
 		{
 		case	Obj_Note :
 			{
-				SaveNote(writer, *(CNoteObj*)pObj, nDivision, strLyrics, nLyricIndex, true);
+				SaveNote(writer, *(CNoteObj*)pObj, nDivision, strLyrics, nLyricIndex, i > 0);
 			}
 			break;
 		case	Obj_Rest :

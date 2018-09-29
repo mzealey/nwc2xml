@@ -1401,17 +1401,60 @@ bool CRestCMObj::LoadChildren(wxFile& in, FILE* out, CStaff* pStaff)
 {
 	UINT nObjCount = mCount;
 
+    int nDivision = m_pParent->GetDivisions();
+    int totalLength = GetDuration(nDivision);
+    int curLength = 0;
+
 	for ( UINT i=0; i<nObjCount; i++ )
 	{
 		CObj* pObj = CreateNLoadObject(in, out, pStaff);
-		if ( pObj )
-		{
-			mObjArray.Add(pObj);
-		}
-		else
-		{
-			return false;
-		}
+		if ( !pObj )
+            return false;
+
+        int thisLength = 0;
+		switch( pObj->mObjType ) {
+            case	Obj_Note :
+                thisLength = ((CNoteObj*)pObj)->GetDuration(nDivision);
+                break;
+            case	Obj_Rest :
+                thisLength = ((CRestObj*)pObj)->GetDuration(nDivision);
+                break;
+        }
+
+        if( curLength + thisLength > totalLength ) {
+            wxFprintf(out, _T("RestCM overflow(div: %d): %d. Prev: %d, Obj: %d\n"), nDivision, totalLength, curLength, thisLength);
+
+            // attempt to correct the duration, but only if it is the only object.
+            if( pObj->mObjType != Obj_Note || nObjCount != 1 ) {
+                wxFprintf(out, _T("Unable to correct overflow, aborting. %d\n"), nObjCount);
+                return false;
+            }
+
+            // Nasty hack for CNoteObj::SetDuration - just clone the rest one.
+            // TODO: Find a better way to set duration to totalLength - curLength if this is the last note
+            CNoteObj *pNoteObj = (CNoteObj*)pObj;
+            pNoteObj->mDuration = mDuration;
+            if( mData2[3] & 0x01 )
+                pNoteObj->mAttribute1[0] |= 0x01;
+            else
+                pNoteObj->mAttribute1[0] &= ~0x01;
+
+            if( mData2[3] & 0x04 )
+                pNoteObj->mAttribute1[0] |= 0x04;
+            else
+                pNoteObj->mAttribute1[0] &= ~0x04;
+            pNoteObj->mData2[1] &= ~0x0C;       // triplet
+
+            if( totalLength != pNoteObj->GetDuration(nDivision) ) {
+                wxFprintf(out, _T("Unable to correct overflow, aborting. newLen: %d\n"), pNoteObj->GetDuration(nDivision));
+                return false;
+            }
+            wxFprintf(out, _T("Overflow corrected successfully\n"));
+            curLength = totalLength;
+        } else
+            curLength += thisLength;
+
+        mObjArray.Add(pObj);
 	}
 
 	return true;
@@ -1423,7 +1466,6 @@ bool CRestCMObj::Dump(FILE* fp)
 	DumpData(fp);
 	wxFprintf(fp, _T(",Count(%d)"), mCount);
 	wxFprintf(fp, _T("\n"));
-	return true;
 }
 
 bool CFontInfo::Dump(FILE* fp, int nIndex)
