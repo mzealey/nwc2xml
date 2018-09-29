@@ -329,6 +329,8 @@ inline	void	XMLSaver::SaveTimeSig(CXMLWriter& writer, const CTimeSigObj& obj)
 
 		writer.WriteKeyEnd();
 	writer.WriteKeyEnd();
+
+    m_curBarDuration = obj.mBit_Measure;
 }
 
 inline	void	XMLSaver::SaveTempo(CXMLWriter& writer, const CTempoObj& obj)
@@ -697,7 +699,10 @@ inline	void	XMLSaver::SaveRest(CXMLWriter& writer, const CRestObj& obj, long nDi
 			writer.WriteKeyStartEnd(_T("rest"));
 		}
 
-		writer.WriteInteger(_T("duration"), obj.GetDuration(nDivision));
+        int duration = obj.GetDuration(nDivision);
+        if( duration > m_curBarDuration * nDivision )
+            duration = m_curBarDuration * nDivision;
+		writer.WriteInteger(_T("duration"), duration);
 		if ( m_nVoice )
 			writer.WriteInteger(_T("voice"), m_nVoice);
 		writer.WriteString(_T("type"), GetNoteType(obj.GetDuration()));

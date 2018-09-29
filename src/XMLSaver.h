@@ -63,4 +63,5 @@ protected:
 	int				m_nSlurNo;
 	int				m_nVoice;
 	wxString			m_strEnding;
+    int m_curBarDuration;
 };
