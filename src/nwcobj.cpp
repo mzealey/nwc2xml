@@ -6,6 +6,7 @@
 #include "nwcfile.h"
 
 wxMBConv* g_pMBConv = &wxConvLocal;
+wxMBConv* g_pMBLocaleConv = new wxCSConv(wxFONTENCODING_CP1252);
 bool g_bDumpOffset = true;
 
 wxString LoadStringNULTerminated(wxFile& in)
@@ -18,20 +19,14 @@ wxString LoadStringNULTerminated(wxFile& in)
 		barr.Add(ch);
 	}
 	barr.Add(0);
-#ifdef UNICODE
 	wxWCharBuffer wcb;
 	wcb = g_pMBConv->cMB2WX((const char*)&barr[0]);
 	if ( (LPCTSTR)wcb == NULL || wcslen(wcb) == 0 )
 	{
-		wcb = wxConvISO8859_1.cMB2WX((const char*)&barr[0]);
+        wcb = g_pMBLocaleConv->cMB2WX((const char*)&barr[0]);
 	}
 
 	str = wcb;
-#else
-	wxWCharBuffer wcb = g_pMBConv->cMB2WX((const char*)&barr[0]);
-	wxCharBuffer cb = wxConvUTF8.cWC2WX(wcb);
-	str = cb;
-#endif
 
 	return str;
 }
