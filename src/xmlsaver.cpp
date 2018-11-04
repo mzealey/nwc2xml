@@ -790,7 +790,7 @@ inline	void	XMLSaver::SavePedal(CXMLWriter& writer, const CPedalObj& obj)
 
 		writer.WriteKeyStart(_T("pedal"));
 		writer.WriteAttrInteger(_T("relative-y"), XMLPosFromNWCPos(obj.mPos));
-		writer.WriteString(szStyle);
+        writer.WriteAttrString(_T("type"), szStyle);
 		writer.WriteKeyEnd();
 
 	writer.WriteKeyEnd();
